@@ -15,12 +15,11 @@ class Pulla:
             for dirname in dirnames:
                 possible_git_dir = os.path.join(dirname, '.git')
                 if os.path.isdir(possible_git_dir):
-                    print('Going into', os.path.join(dirname))
                     os.chdir(dirname)
                     cmd = 'git pull'
                     if self.verbosity:
                         cmd += ' --verbose'
-                    print('Running:', cmd)
+                    print(os.path.join(dirname), ':', cmd)
                     if self.verbosity:
                         print('----------------------')
                     #response = input('Do you want to proceed: ')
