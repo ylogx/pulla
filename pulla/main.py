@@ -13,24 +13,31 @@ class Pulla:
     def pull_all(self, folder):
         for (dirpath, dirnames, filenames) in os.walk(folder):
             for dirname in dirnames:
-                possible_git_dir = os.path.join(dirname, '.git')
-                if os.path.isdir(possible_git_dir):
-                    os.chdir(dirname)
-                    cmd = 'git pull'
-                    if self.verbosity:
-                        cmd += ' --verbose'
-                    print(os.path.join(dirname), ':', cmd)
-                    if self.verbosity:
-                        print('----------------------')
-                    #response = input('Do you want to proceed: ')
-                    #if response in ['y', 'yes', 'yup', 'yo', 'doit']:
-                    os.system(cmd)
-                    if self.verbosity:
-                        print('----------------------')
+                if is_this_a_git_dir(dirname):
+                    self.do_pull_in(dirname)
                     os.chdir(os.path.join(dirpath, dirname, '..'))
+                    #TODO: chdir needs to happen in do_pull_in function
             if not self.recursive:
                 break
         return None
+
+    def do_pull_in(self, directory):
+        os.chdir(directory)
+        cmd = 'git pull'
+        if self.verbosity:
+            cmd += ' --verbose'
+        print(os.path.join(directory), ':', cmd)
+        if self.verbosity:
+            print('----------------------')
+        #response = input('Do you want to proceed: ')
+        #if response in ['y', 'yes', 'yup', 'yo', 'doit']:
+        os.system(cmd)
+        if self.verbosity:
+            print('----------------------')
+
+def is_this_a_git_dir(directory):
+     possible_git_dir = os.path.join(directory, '.git')
+     return os.path.isdir(possible_git_dir)
 
 def main():
     ''' Main
