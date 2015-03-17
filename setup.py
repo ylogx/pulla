@@ -17,7 +17,7 @@ fhan.close()
 setup(
         name='Pulla',
         description='Pulla helps you pull content from all repos in any folder',
-        version='0.0.1',
+        version='0.0.2',
         packages=['pulla'],
         license='GPLv3+',
         author='Shubham Chaudhary',
