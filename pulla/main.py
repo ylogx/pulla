@@ -11,7 +11,7 @@ class Pulla:
         self.recursive = recursive
 
     def pull_all(self, folder):
-        for (dirpath, dirnames, filenames) in os.walk(folder):
+        for (dirpath, dirnames, _) in os.walk(folder):
             for dirname in dirnames:
                 if is_this_a_git_dir(dirname):
                     self.do_pull_in(dirname)
