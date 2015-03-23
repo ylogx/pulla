@@ -62,7 +62,11 @@ def main():
 
     print('Directory is: ', directory)
     pulla = Pulla(verbosity=True, recursive=False)
-    pulla.pull_all(directory)
+
+    if is_this_a_git_dir(directory):
+        pulla.do_pull_in(directory)
+    else:
+        pulla.pull_all(directory)
 
 if __name__ == '__main__':
     sys.exit(main())
