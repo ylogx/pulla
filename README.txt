@@ -13,5 +13,5 @@ pip3 install pulla
 #### Usage
 
 ```sh
-$ pullla -h
+$ pulla -h
 ```
