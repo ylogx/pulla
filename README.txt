@@ -1,24 +1,13 @@
 Pulla
 =========
 
-Are you tired of doing `git pull` into all your folders to keep them updated.  
+Are you tired of doing `git pull` into all your git folders to keep them updated.  
+
 With Pulla we present a solution to you:  
 
 Pulla lets you pull code into all subfolder containing git projects.  
 
-
-#### Installation
-Pulla is available from PyPi
-
-```sh
-# sudo pip3 install pulla
-```
-
 #### Usage
-
-```sh
-code $ pulla -h
-```
 
 ```sh
 code $  ls
@@ -72,5 +61,13 @@ From github.com:shubhamchaudhary/wordpowermadeeasy
  * [new branch]      wordnik    -> origin/wordnik
 Already up-to-date.
 ----------------------
+
+code $ pulla -h
 ```
 
+#### Installation
+Pulla is available from PyPi
+
+```
+# sudo pip3 install pulla
+```
