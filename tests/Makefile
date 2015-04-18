@@ -1,6 +1,7 @@
 TESTS = $(wildcard test_*.py)
 
-all.PHONY: test test26 test27 test34 test35
+all.PHONY: test
+#test26 test27 test34 test35
 
 #.PHONY: test
 
