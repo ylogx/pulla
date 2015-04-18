@@ -1,4 +1,4 @@
-Pulla
+Pulla [![Build Status](https://travis-ci.org/shubhamchaudhary/pulla.svg)](https://travis-ci.org/shubhamchaudhary/pulla)
 =========
 
 Are you tired of doing `git pull` into all your git folders to keep them updated.  
