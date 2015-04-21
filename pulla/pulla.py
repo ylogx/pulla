@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import multiprocessing
 from pulla.utils import is_this_a_git_dir
 
 VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
@@ -13,10 +14,13 @@ class Pulla:
         self.recursive = recursive
 
     def pull_all(self, folder):
-        for (dirpath, dirnames, _) in os.walk(folder):
+        for (_, dirnames, _) in os.walk(folder):
+            threads = []
             for directory in dirnames:
                 if is_this_a_git_dir(directory):
-                    self.do_pull_in(directory)
+                    process = multiprocessing.Process(target=self.do_pull_in, args=[directory])
+                    process.start()
+                    threads.append(process)
             if not self.recursive:
                 break
         return None
