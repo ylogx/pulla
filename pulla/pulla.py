@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+from pulla.utils import is_this_a_git_dir
 
 class Pulla:
     ''' Pulla class
@@ -33,9 +34,4 @@ class Pulla:
         os.system(cmd)
         if self.verbosity:
             print('----------------------')
-
-
-def is_this_a_git_dir(directory):
-    possible_git_dir = os.path.join(directory, '.git')
-    return os.path.isdir(possible_git_dir)
 
