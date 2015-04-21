@@ -3,6 +3,8 @@ from __future__ import print_function
 import os
 from pulla.utils import is_this_a_git_dir
 
+VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
+
 class Pulla:
     ''' Pulla class
     '''
@@ -28,13 +30,21 @@ class Pulla:
         return None
 
     def do_pull_in(self, directory):
-        os.chdir(directory)
-        cmd = 'git pull'
+        can_use_c_flag = self.get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
+        if can_use_c_flag:
+            cmd = 'git -C ' + directory + ' pull'
+        else:
+            os.chdir(directory)
+            cmd = 'git pull'
         if self.verbosity:
             cmd += ' --verbose'
         else:
             cmd += ' &> /dev/null'
         status = os.system(cmd)
-        os.chdir('..')
+        if not can_use_c_flag:
+            os.chdir('..')
         return status
 
+    def get_git_version(self):
+        version_string = os.popen('git --version').read()
+        return version_string.split()[-1]
