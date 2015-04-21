@@ -2,16 +2,18 @@
 #=====================
 from __future__ import print_function
 
-import unittest
+try:
+    import unittest
+    import unittest.mock
+    from unittest.mock import patch
+except ImportError as e:
+    import mock
+    from mock import patch
 
 import os
 import shutil
-import sys
-
-sys.path.append('..')      # XXX Probably needed to import your code
 
 from pulla.main import is_this_a_git_dir
-
 
 class test_that_need_a_git_directory(unittest.TestCase):
     def setUp(self):
