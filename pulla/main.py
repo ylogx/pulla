@@ -30,7 +30,7 @@ def main():
     if args.folder:
         directory = args.folder
 
-    pulla = Pulla(verbosity=True, recursive=False)
+    pulla = Pulla(verbosity=False, recursive=False)
 
     if is_this_a_git_dir(directory):
         pulla.do_pull_in(directory)
