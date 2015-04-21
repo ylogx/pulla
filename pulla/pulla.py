@@ -26,7 +26,7 @@ class Pulla:
         cmd = 'git pull'
         if self.verbosity:
             cmd += ' --verbose'
-        print(os.path.join(directory), ':', cmd)
+        print(os.path.join(directory), ':')
         if self.verbosity:
             print('----------------------')
         #response = input('Do you want to proceed: ')

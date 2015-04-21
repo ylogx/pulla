@@ -30,7 +30,6 @@ def main():
     if args.folder:
         directory = args.folder
 
-    print('Directory is: ', directory)
     pulla = Pulla(verbosity=True, recursive=False)
 
     if is_this_a_git_dir(directory):
