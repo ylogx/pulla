@@ -54,5 +54,7 @@ class Pulla:
         return status
 
     def get_git_version(self):
-        version_string = os.popen('git --version').read()
+        han = os.popen('git --version')
+        version_string = han.read()
+        han.close()
         return version_string.split()[-1]
