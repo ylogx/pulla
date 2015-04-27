@@ -34,4 +34,5 @@ class test_that_need_a_git_directory(unittest.TestCase):
     def test_is_this_a_git_dir_returns_true_for_git_dir(self):
         self.assertTrue(is_this_a_git_dir(self.test_dir))
 
-unittest.main()
+if __name__ == '__main__':
+    unittest.main()
