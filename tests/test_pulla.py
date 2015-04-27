@@ -118,6 +118,17 @@ class test_get_git_version(unittest.TestCase):
 
         self.assertEqual(git_version, '2.2.2')
 
+    @patch('os.popen')
+    def test_opened_stream_is_closed(self, mock_popen):
+        self.puller.get_git_version()
+
+        calls = [
+            call('git --version'),
+            call().read(),
+            call().close(),
+        ]
+        mock_popen.assert_has_calls(calls)
+
 
 if __name__ == '__main__':
     unittest.main()
