@@ -108,6 +108,16 @@ class test_do_pull_in(unittest.TestCase):
 
         mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Fail')
 
+class test_get_git_version(unittest.TestCase):
+    def setUp(self):
+        self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
+        self.puller = Pulla()
+
+    def test_correct_git_version_returned(self):
+        git_version = self.puller.get_git_version()
+
+        self.assertEqual(git_version, '2.2.2')
+
 
 if __name__ == '__main__':
     unittest.main()
