@@ -108,6 +108,24 @@ class test_do_pull_in(unittest.TestCase):
 
         mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Fail')
 
+
+class test_perform_git_pull(unittest.TestCase):
+    def setUp(self):
+        self.directory = 'foo'
+        self.puller = Pulla()
+
+    @patch('os.system')
+    def test_pull_done_silently_when_no_verbosity(self, mock_os_system_cmd):
+        expected_status = 128
+        mock_os_system_cmd.return_value = expected_status
+        expected_cmd = 'git -C foo pull &> /dev/null'
+
+        status = self.puller.perform_git_pull(self.directory)
+
+        mock_os_system_cmd.assert_called_once_with(expected_cmd)
+        self.assertEqual(status, expected_status)
+
+
 class test_get_git_version(unittest.TestCase):
     def setUp(self):
         self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
