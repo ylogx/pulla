@@ -32,10 +32,9 @@ class Pulla:
         status_msg = 'Fail'
         if status == 0:
             status_msg = 'Success'
-        print('{0:<20} {1:<10}'.format(os.path.join(directory), status_msg))
+        print(self.get_formatted_status_message(directory, status_msg))
         if self.verbosity:
             print('----------------------')
-
 
     def perform_git_pull(self, directory):
         can_use_c_flag = self.get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
@@ -52,6 +51,9 @@ class Pulla:
         if not can_use_c_flag:
             os.chdir('..')
         return status
+
+    def get_formatted_status_message(self, directory, status_msg):
+        return '{0:<20} {1:<10}'.format(os.path.join(directory), status_msg)
 
     def get_git_version(self):
         han = os.popen('git --version')

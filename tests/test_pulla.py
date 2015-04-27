@@ -91,6 +91,26 @@ class test_do_pull_in(unittest.TestCase):
 
         mock_perform_git_pull.assert_called_once_with(directory)
 
+    @patch('pulla.pulla.Pulla.get_formatted_status_message')
+    def test_status_success_when_git_command_successful(self, mock_get_formatted_status_message, mock_perform_git_pull):
+        directory = 'foo'
+        mock_perform_git_pull.return_value = 0
+
+        puller = Pulla()
+        puller.do_pull_in(directory)
+
+        mock_get_formatted_status_message.assert_called_once_with(directory, 'Success')
+
+    @patch('pulla.pulla.Pulla.get_formatted_status_message')
+    def test_status_fail_when_git_command_successful(self, mock_get_formatted_status_message, mock_perform_git_pull):
+        directory = 'foo'
+        mock_perform_git_pull.return_value = 128
+
+        puller = Pulla()
+        puller.do_pull_in(directory)
+
+        mock_get_formatted_status_message.assert_called_once_with(directory, 'Fail')
+
 
 if __name__ == '__main__':
     unittest.main()
