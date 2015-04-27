@@ -79,5 +79,18 @@ class test_pull_all(unittest.TestCase):
         ))
         return calls_for_process_creation
 
+
+@patch('pulla.pulla.Pulla.perform_git_pull')
+class test_do_pull_in(unittest.TestCase):
+
+    def test_perform_git_pull_called_for_passed_directory(self, mock_perform_git_pull):
+        directory = 'foo'
+
+        puller = Pulla()
+        puller.do_pull_in(directory)
+
+        mock_perform_git_pull.assert_called_once_with(directory)
+
+
 if __name__ == '__main__':
     unittest.main()
