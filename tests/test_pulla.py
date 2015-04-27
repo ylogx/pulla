@@ -18,19 +18,30 @@ from pulla.pulla import Pulla
 class test_pull_all(unittest.TestCase):
 
     @patch('pulla.pulla.is_this_a_git_dir')
-    def test_pull_all_runs_pull_in_all_folders(self, is_git_mock, walk_mock):
+    @patch('multiprocessing.Process')
+    def test_pull_all_runs_pull_in_all_folders(self, mock_multiprocess, mock_is_git, mock_walk):
         directories = ('a', 'b', 'c')
-        walk_mock.return_value = [
+        mock_walk.return_value = [
             ('/foo', directories, ('baz',)),
             ('/foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
             ]
-        is_git_mock.return_value = True
+        mock_is_git.return_value = True
 
         puller = Pulla()
         puller.pull_all('foo')
 
-        calls_1 = [call('a'), call('b'), call('c')]
-        is_git_mock.assert_has_calls(calls_1)
+        calls = [call('a'), call('b'), call('c')]
+        mock_is_git.assert_has_calls(calls)
+
+        calls_for_process_creation = [
+            call(args=['a'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['b'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['c'], target=puller.do_pull_in),
+            call().start(),
+        ]
+        mock_multiprocess.assert_has_calls(calls_for_process_creation)
 
 if __name__ == '__main__':
     unittest.main()
