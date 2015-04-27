@@ -13,7 +13,7 @@ except ImportError as e:
 import os
 import shutil
 
-from pulla.main import is_this_a_git_dir
+from pulla.utils import is_this_a_git_dir
 
 class test_that_need_a_git_directory(unittest.TestCase):
     def setUp(self):
