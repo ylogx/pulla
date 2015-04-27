@@ -16,10 +16,10 @@ except ImportError as e:
 from pulla.pulla import Pulla
 
 @patch('os.walk')
+@patch('pulla.pulla.is_this_a_git_dir')
+@patch('multiprocessing.Process')
 class test_pull_all(unittest.TestCase):
 
-    @patch('pulla.pulla.is_this_a_git_dir')
-    @patch('multiprocessing.Process')
     def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
         directories_folder = ('a', 'b', 'c')
 
@@ -41,8 +41,6 @@ class test_pull_all(unittest.TestCase):
         )
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
 
-    @patch('pulla.pulla.is_this_a_git_dir')
-    @patch('multiprocessing.Process')
     def test_pull_all_starts_process_for_all_folders_when_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
         directories_folder = ('a', 'b', 'c')
         directory_sub_folder = ('d', 'e', 'f')
