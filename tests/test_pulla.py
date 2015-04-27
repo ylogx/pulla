@@ -20,11 +20,13 @@ from pulla.pulla import Pulla
 @patch('multiprocessing.Process')
 class test_pull_all(unittest.TestCase):
 
-    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
-        directories_folder = ('a', 'b', 'c')
+    def setUp(self):
+        self.directories_folder = ('a', 'b', 'c')
+        self.directory_sub_folder = ('d', 'e', 'f')
 
+    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
         mock_walk.return_value = [
-            ('/foo', directories_folder, ('baz',)),
+            ('/foo', self.directories_folder, ('baz',)),
             ('/foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
             ]
         mock_is_git.return_value = True
@@ -36,24 +38,22 @@ class test_pull_all(unittest.TestCase):
         mock_is_git.assert_has_calls(calls)
 
         calls_for_process_creation = self.get_calls_for_process_creation(
-            directories_folder,
+            self.directories_folder,
             puller
         )
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
 
     def test_pull_all_starts_process_for_all_folders_when_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
-        directories_folder = ('a', 'b', 'c')
-        directory_sub_folder = ('d', 'e', 'f')
         mock_walk.return_value = [
-            ('/foo', directories_folder, ('baz',)),
-            ('/foo/bar', directory_sub_folder, ('spam', 'eggs')),
+            ('/foo', self.directories_folder, ('baz',)),
+            ('/foo/bar', self.directory_sub_folder, ('spam', 'eggs')),
             ]
         mock_is_git.return_value = True
 
         puller = Pulla(recursive=True)
         puller.pull_all('foo')
 
-        directories_to_be_pulled = directories_folder + directory_sub_folder
+        directories_to_be_pulled = self.directories_folder + self.directory_sub_folder
 
         calls_for_process_creation = self.get_calls_for_process_creation(
             directories_to_be_pulled,
@@ -83,33 +83,30 @@ class test_pull_all(unittest.TestCase):
 @patch('pulla.pulla.Pulla.perform_git_pull')
 class test_do_pull_in(unittest.TestCase):
 
+    def setUp(self):
+        self.directory = 'foo'
+        self.puller = Pulla()
+
     def test_perform_git_pull_called_for_passed_directory(self, mock_perform_git_pull):
-        directory = 'foo'
+        self.puller.do_pull_in(self.directory)
 
-        puller = Pulla()
-        puller.do_pull_in(directory)
-
-        mock_perform_git_pull.assert_called_once_with(directory)
+        mock_perform_git_pull.assert_called_once_with(self.directory)
 
     @patch('pulla.pulla.Pulla.get_formatted_status_message')
     def test_status_success_when_git_command_successful(self, mock_get_formatted_status_message, mock_perform_git_pull):
-        directory = 'foo'
         mock_perform_git_pull.return_value = 0
 
-        puller = Pulla()
-        puller.do_pull_in(directory)
+        self.puller.do_pull_in(self.directory)
 
-        mock_get_formatted_status_message.assert_called_once_with(directory, 'Success')
+        mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Success')
 
     @patch('pulla.pulla.Pulla.get_formatted_status_message')
     def test_status_fail_when_git_command_successful(self, mock_get_formatted_status_message, mock_perform_git_pull):
-        directory = 'foo'
         mock_perform_git_pull.return_value = 128
 
-        puller = Pulla()
-        puller.do_pull_in(directory)
+        self.puller.do_pull_in(self.directory)
 
-        mock_get_formatted_status_message.assert_called_once_with(directory, 'Fail')
+        mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Fail')
 
 
 if __name__ == '__main__':
