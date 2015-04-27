@@ -19,7 +19,7 @@ class test_pull_all(unittest.TestCase):
 
     @patch('pulla.pulla.is_this_a_git_dir')
     @patch('multiprocessing.Process')
-    def test_pull_all_runs_pull_in_all_folders(self, mock_multiprocess, mock_is_git, mock_walk):
+    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
         directories = ('a', 'b', 'c')
         mock_walk.return_value = [
             ('/foo', directories, ('baz',)),
@@ -39,6 +39,36 @@ class test_pull_all(unittest.TestCase):
             call(args=['b'], target=puller.do_pull_in),
             call().start(),
             call(args=['c'], target=puller.do_pull_in),
+            call().start(),
+        ]
+        mock_multiprocess.assert_has_calls(calls_for_process_creation)
+
+    @patch('pulla.pulla.is_this_a_git_dir')
+    @patch('multiprocessing.Process')
+    def test_pull_all_starts_process_for_all_folders_when_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
+        directories_folder = ('a', 'b', 'c')
+        directory_sub_folder = ('d', 'e', 'f')
+        mock_walk.return_value = [
+            ('/foo', directories_folder, ('baz',)),
+            ('/foo/bar', directory_sub_folder, ('spam', 'eggs')),
+            ]
+        mock_is_git.return_value = True
+
+        puller = Pulla(recursive=True)
+        puller.pull_all('foo')
+
+        calls_for_process_creation = [
+            call(args=['a'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['b'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['c'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['d'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['e'], target=puller.do_pull_in),
+            call().start(),
+            call(args=['f'], target=puller.do_pull_in),
             call().start(),
         ]
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
