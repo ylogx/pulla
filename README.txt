@@ -71,3 +71,11 @@ Pulla is available from PyPi
 ```
 # sudo pip3 install pulla
 ```
+
+
+#### Contributors
+To run the tests:
+
+```
+nosetests
+```
