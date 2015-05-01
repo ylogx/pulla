@@ -14,8 +14,9 @@ matrix:
 install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
-script: nosetests
-after_script:
-  - pip install pulla
+script:
+  - nosetests
   - python setup.py sdist
   - pip install --upgrade dist/Pulla*.tar.gz
+after_script:
+  - pip install pulla
