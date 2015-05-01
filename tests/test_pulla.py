@@ -9,6 +9,7 @@ try:
     from unittest.mock import patch
     from unittest.mock import call
 except ImportError as e:
+    import unittest2 as unittest
     import mock
     from mock import patch
     from mock import call

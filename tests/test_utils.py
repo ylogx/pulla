@@ -7,6 +7,7 @@ try:
     import unittest.mock
     from unittest.mock import patch
 except ImportError as e:
+    import unittest2 as unittest
     import mock
     from mock import patch
 
