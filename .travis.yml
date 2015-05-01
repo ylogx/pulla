@@ -18,4 +18,4 @@ script: nosetests
 after_script:
   - pip install pulla
   - python setup.py sdist
-  - pip install --upgrade dist/pulla*.tar.gz
+  - pip install --upgrade dist/Pulla*.tar.gz
