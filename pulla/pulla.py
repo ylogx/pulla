@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import os
 import multiprocessing
-from pulla.utils import is_this_a_git_dir
+from .utils import is_this_a_git_dir
 
 VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
 

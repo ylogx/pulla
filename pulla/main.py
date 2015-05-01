@@ -6,8 +6,8 @@ import sys
 import os
 import argparse
 
-from pulla.pulla import Pulla
-from pulla.utils import is_this_a_git_dir
+from .pulla import Pulla
+from .utils import is_this_a_git_dir
 
 def main():
     ''' Main
