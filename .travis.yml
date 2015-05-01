@@ -11,13 +11,11 @@ python:
 matrix:
   allow_failures:
     - python: 2.6
-before_install:
-  - pip install -r requirements.txt
 install:
-  - python setup.py sdist
-# - pip install dist/pulla*.tar.gz
-before_script:
-  - pip install nose
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
 script: nosetests
 after_script:
   - pip install pulla
+  - python setup.py sdist
+  - pip install --upgrade dist/pulla*.tar.gz
