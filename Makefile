@@ -19,8 +19,7 @@ install:
 	pip install --upgrade dist/Pulla-$(VERSION).tar.gz
 
 coverage:
-	$(eval OMIT_DIR := '$(shell which nosetests | cut -c 1-4)*')
-	@coverage run  --omit=$(OMIT_DIR) `which nosetests`
+	@coverage run  --include='*pulla*' `which nosetests`
 	@coverage report
 
 test:
