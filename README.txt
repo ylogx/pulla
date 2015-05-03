@@ -69,7 +69,7 @@ code $ pulla -h
 Pulla is available from PyPi
 
 ```
-# sudo pip3 install pulla
+# pip install pulla
 ```
 
 
