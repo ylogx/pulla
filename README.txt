@@ -1,4 +1,4 @@
-Pulla [![Build Status](https://travis-ci.org/shubhamchaudhary/pulla.svg)](https://travis-ci.org/shubhamchaudhary/pulla)
+Pulla [![Build Status](https://travis-ci.org/shubhamchaudhary/pulla.svg)](https://travis-ci.org/shubhamchaudhary/pulla) [![Coverage Status](https://coveralls.io/repos/shubhamchaudhary/pulla/badge.svg)](https://coveralls.io/r/shubhamchaudhary/pulla)
 =========
 
 Are you tired of doing `git pull` into all your git folders to keep them updated.  
