@@ -15,4 +15,5 @@ script:
   - nosetests
   - make install
 after_script:
+  - make coverage
   - pip install pulla --upgrade
