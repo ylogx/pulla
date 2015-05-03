@@ -74,8 +74,4 @@ Pulla is available from PyPi
 
 
 #### Contributors
-To run the tests:
-
-```
-nosetests
-```
+Checkout CONTRIBUTION.md file
