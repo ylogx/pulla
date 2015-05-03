@@ -1,6 +1,6 @@
 TEST_FILES = $(wildcard tests/test_*.py)
 TESTS = $(subst .py,,$(subst /,.,$(TEST_FILES)))
-VERSION = 0.0.6
+VERSION = $(shell cat setup.py | grep version | sed -e "s/version=//" -e "s/'//g" -e "s/,//" -e 's/^[ \t]*//')
 
 all.PHONY: nosetests_2_3
 
