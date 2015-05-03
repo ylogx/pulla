@@ -16,7 +16,7 @@ install:
 	python setup.py sdist
 	@echo "Installing package using pip"
 	@echo "----------------------------"
-	sudo pip install --upgrade dist/Pulla-$(VERSION).tar.gz
+	pip install --upgrade dist/Pulla-$(VERSION).tar.gz
 
 test:
 	@- $(foreach TEST,$(TESTS), \
