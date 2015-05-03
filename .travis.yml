@@ -16,7 +16,8 @@ script:
   - nosetests
   - make install
 after_script:
-  - make coverage
-  - pip install pulla --upgrade
+  - pip uninstall pulla
+  - pip install pulla
 after_success:
+  - make coverage
   - coveralls
