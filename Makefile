@@ -18,6 +18,10 @@ install:
 	@echo "----------------------------"
 	pip install --upgrade dist/Pulla-$(VERSION).tar.gz
 
+coverage:
+	@coverage run  --omit='/usr/*' --omit='/Library/*' `which nosetests`
+	@coverage report
+
 test:
 	@- $(foreach TEST,$(TESTS), \
 		echo === Running test: $(TEST); \
