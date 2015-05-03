@@ -13,7 +13,6 @@ install:
   - pip install -r requirements-dev.txt
 script:
   - nosetests
-  - python setup.py sdist
-  - pip install --upgrade dist/Pulla*.tar.gz
+  - make install
 after_script:
-  - pip install pulla
+  - pip install pulla --upgrade

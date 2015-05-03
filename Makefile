@@ -13,7 +13,7 @@ nosetests_2_3:
 install:
 	@echo "Creating distribution package for version $(VERSION)"
 	@echo "-----------------------------------------------"
-	python3 setup.py sdist
+	python setup.py sdist
 	@echo "Installing package using pip"
 	@echo "----------------------------"
 	sudo pip install --upgrade dist/Pulla-$(VERSION).tar.gz
