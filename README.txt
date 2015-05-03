@@ -14,6 +14,10 @@ code $  ls
 vdm                   wordpowermadeeasy
 
 code $  pulla
+wordpowermadeeasy:  Success
+vdm:                Success
+
+code $  pulla --verbose
 Directory is:  ~/code/
 ----------------------
 vdm : git pull --verbose
