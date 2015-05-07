@@ -16,10 +16,11 @@ def main():
     #usage = "%prog [-f credential_file]"
     #parser = ArgumentParser(usage=usage)
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--folder", type=str, dest="folder",
-                        help="Update the repos in this folder")
-    parser.add_argument("-v", "--verbose", required=False, dest="verbosity",
-                        type=int, default=1, help="Verbosity")
+    parser.add_argument('-f', '--folder', type=str, dest='folder',
+                        help='Update the repos in this folder')
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help='Sets the verbosity level one')
+
     #parser.add_argument('otherthings', nargs='*')
     #args = parser.parse_args()
     args, otherthings = parser.parse_known_args()
@@ -30,7 +31,11 @@ def main():
     if args.folder:
         directory = args.folder
 
-    pulla = Pulla(verbosity=False, recursive=False)
+    verbosity = None
+    if args.verbose:
+        verbosity = 1
+
+    pulla = Pulla(verbosity=verbosity, recursive=False)
 
     if is_this_a_git_dir(directory):
         pulla.do_pull_in(directory)

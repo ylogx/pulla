@@ -126,6 +126,15 @@ class test_perform_git_pull(unittest.TestCase):
         mock_os_system_cmd.assert_called_once_with(expected_cmd)
         self.assertEqual(status, expected_status)
 
+    @patch('os.system')
+    def test_pull_done_when_verbosity_level_set_one(self, mock_os_system):
+        self.puller.verbosity = 1
+        expected_cmd = 'git -C foo pull --verbose'
+
+        self.puller.perform_git_pull(self.directory)
+
+        mock_os_system.assert_called_once_with(expected_cmd)
+
 
 class test_get_git_version(unittest.TestCase):
     def setUp(self):
