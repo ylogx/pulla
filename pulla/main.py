@@ -19,7 +19,7 @@ def main():
     parser.add_argument('-f', '--folder', type=str, dest='folder',
                         help='Update the repos in this folder')
     parser.add_argument('-v', '--verbose', action='store_true',
-                        help='Sets the verbosity level one')
+                        help='Show verbose information. Higher verbosity can be selected by --verbosity flag')
 
     #parser.add_argument('otherthings', nargs='*')
     #args = parser.parse_args()
