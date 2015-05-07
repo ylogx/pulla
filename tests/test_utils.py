@@ -12,7 +12,6 @@ except ImportError as e:
     from mock import patch
 
 import os
-import shutil
 
 from pulla.utils import is_this_a_git_dir
 
@@ -24,7 +23,7 @@ class test_that_need_a_git_directory(unittest.TestCase):
     @patch('os.path.isdir')
     def test_is_this_a_git_dir_returns_true_for_git_dir(self, mock_is_dir):
         test_dir= 'dummy_dir'
-        possible_git_dir = test_dir + '/.git'
+        possible_git_dir = os.path.join(test_dir, '.git')
         mock_is_dir.return_value = True
 
         output = is_this_a_git_dir(test_dir)

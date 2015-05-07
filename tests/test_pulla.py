@@ -27,8 +27,8 @@ class test_pull_all(unittest.TestCase):
 
     def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
         mock_walk.return_value = [
-            ('/foo', self.directories_folder, ('baz',)),
-            ('/foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
+            ('foo', self.directories_folder, ('baz',)),
+            ('foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
             ]
         mock_is_git.return_value = True
 
@@ -46,8 +46,8 @@ class test_pull_all(unittest.TestCase):
 
     def test_pull_all_starts_process_for_all_folders_when_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
         mock_walk.return_value = [
-            ('/foo', self.directories_folder, ('baz',)),
-            ('/foo/bar', self.directory_sub_folder, ('spam', 'eggs')),
+            ('foo', self.directories_folder, ('baz',)),
+            ('foo/bar', self.directory_sub_folder, ('spam', 'eggs')),
             ]
         mock_is_git.return_value = True
 
