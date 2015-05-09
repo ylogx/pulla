@@ -18,6 +18,8 @@ except ImportError as e:
 from pulla.main import main
 
 
+@patch('pulla.main.Pulla.pull_all')
+@patch('pulla.main.Pulla.do_pull_in')
 class TestMain(unittest.TestCase):
     def setUp(self):
         self.argv_backup = sys.argv
@@ -25,16 +27,16 @@ class TestMain(unittest.TestCase):
     def tearDown(self):
         sys.argv = self.argv_backup
 
-    @patch('pulla.main.Pulla.pull_all')
-    def test_should_do_pull_in_subdirectories_if_no_args(self, mock_pull_all):
+    def test_should_do_pull_in_subdirectories_if_no_args(self, mock_do_pull_in, mock_pull_all):
+        self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy']
         main()
         curdir = os.path.abspath(os.curdir)
         mock_pull_all.assert_called_once_with(curdir)
 
     @patch('pulla.main.is_this_a_git_dir')
-    @patch('pulla.main.Pulla.do_pull_in')
-    def test_should_do_pull_in_current_directory_if_is_git_dir(self, mock_do_pull_in, mock_is_git_dir):
+    def test_should_do_pull_in_current_directory_if_is_git_dir(self, mock_is_git_dir, mock_do_pull_in, mock_pull_all):
+        self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         curdir = os.path.abspath(os.curdir)
         sys.argv = ['dummy']
         mock_is_git_dir.return_value = True
@@ -44,16 +46,23 @@ class TestMain(unittest.TestCase):
         mock_do_pull_in.assert_called_once_with(curdir)
 
     @patch('pulla.main.Pulla')
-    def test_should_set_verbosity_1_if_short_flag_passed(self, mock_pulla):
+    def test_should_set_verbosity_1_if_short_flag_passed(self, mock_pulla, mock_do_pull_in, mock_pull_all):
+        self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy', '-v']
         main()
         mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
 
     @patch('pulla.main.Pulla')
-    def test_should_set_verbosity_1_if_long_flag_passed(self, mock_pulla):
+    def test_should_set_verbosity_1_if_long_flag_passed(self, mock_pulla, mock_do_pull_in, mock_pull_all):
+        self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy', '--verbose']
         main()
         mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
+
+    def ensure_no_git_pull_done(self, mock_do_pull_in, mock_pull_all):
+        mock_do_pull_in.return_value = 0
+        mock_pull_all.return_value = 0
+
 
 
 class AnyStringContaining(str):
