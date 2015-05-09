@@ -27,10 +27,14 @@ class TestMain(unittest.TestCase):
     def tearDown(self):
         sys.argv = self.argv_backup
 
-    def test_should_do_pull_in_subdirectories_if_no_args(self, mock_do_pull_in, mock_pull_all):
+    @patch('pulla.main.is_this_a_git_dir')
+    def test_should_do_pull_in_subdirectories_if_no_args(self, mock_is_git_dir, mock_do_pull_in, mock_pull_all):
         self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy']
+        mock_is_git_dir.return_value = False
+
         main()
+
         curdir = os.path.abspath(os.curdir)
         mock_pull_all.assert_called_once_with(curdir)
 
