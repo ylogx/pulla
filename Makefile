@@ -19,7 +19,7 @@ install:
 	pip install --upgrade dist/Pulla-$(VERSION).tar.gz
 
 coverage:
-	@coverage run  --include='*pulla*' `which nosetests`
+	@coverage run `which nosetests`
 	@coverage report
 
 test:
