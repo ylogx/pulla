@@ -9,23 +9,24 @@ import argparse
 from .pulla import Pulla
 from .utils import is_this_a_git_dir
 
-def main():
-    ''' Main
-    '''
-    # Parse command line arguments
-    #usage = "%prog [-f credential_file]"
-    #parser = ArgumentParser(usage=usage)
+
+def parse_known_args():
+    """ Parse command line arguments
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--folder', type=str, dest='folder',
                         help='Update the repos in this folder')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='Show verbose information. Higher verbosity can be selected by --verbosity flag')
-
-    #parser.add_argument('otherthings', nargs='*')
-    #args = parser.parse_args()
     args, otherthings = parser.parse_known_args()
-    argc = len(otherthings)
+    return args, otherthings
 
+
+def main():
+    """ Main
+    """
+    args, otherthings = parse_known_args()
+    argc = len(otherthings)
 
     directory = os.path.abspath(os.curdir)
     if args.folder:
