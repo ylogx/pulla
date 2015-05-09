@@ -1,6 +1,6 @@
 [run]
 branch = True
-omit = /usr*,setup.py,*egg*,.venv/*,.tox/*,test/*,tests/*,/Library*
+omit = /usr*,/opt*,setup.py,*egg*,*virtualenv*,.venv/*,.tox/*,test/*,tests/*,/Library*
 
 [report]
 ignore-errors = True
