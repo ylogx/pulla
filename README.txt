@@ -1,5 +1,12 @@
-Pulla [![Build Status](https://travis-ci.org/shubhamchaudhary/pulla.svg)](https://travis-ci.org/shubhamchaudhary/pulla) [![Coverage Status](https://coveralls.io/repos/shubhamchaudhary/pulla/badge.svg)](https://coveralls.io/r/shubhamchaudhary/pulla) [![Stories in Ready](https://badge.waffle.io/shubhamchaudhary/pulla.png?label=ready&title=Ready)](https://waffle.io/shubhamchaudhary/pulla)
+Pulla
 =========
+
+[![PyPI](https://img.shields.io/pypi/v/pulla.svg)](https://pypi.python.org/pypi/pulla) [![PyPI](https://img.shields.io/pypi/dm/pulla.svg)](https://pypi.python.org/pypi/pulla) [![PyPI](https://img.shields.io/pypi/l/pulla.svg)](https://pypi.python.org/pypi/pulla) [![GitHub tag](https://img.shields.io/github/tag/shubhamchaudhary/pulla.svg)](https://github.com/shubhamchaudhary/pulla/releases) [![GitHub release](https://img.shields.io/github/release/shubhamchaudhary/pulla.svg)](https://github.com/shubhamchaudhary/pulla/releases/latest)
+
+[![Build Status](https://travis-ci.org/shubhamchaudhary/pulla.svg)](https://travis-ci.org/shubhamchaudhary/pulla) [![Coverage Status](https://coveralls.io/repos/shubhamchaudhary/pulla/badge.svg?branch=master)](https://coveralls.io/r/shubhamchaudhary/pulla?branch=master) [![Build Status](https://snap-ci.com/shubhamchaudhary/pulla/branch/master/build_image)](https://snap-ci.com/shubhamchaudhary/pulla/branch/master)
+
+[![GitHub issues](https://img.shields.io/github/issues/shubhamchaudhary/pulla.svg?style=plastic)](https://github.com/shubhamchaudhary/pulla/issues) [![Stories in Ready](https://badge.waffle.io/shubhamchaudhary/pulla.png?label=ready&title=Ready)](https://waffle.io/shubhamchaudhary/pulla)
+
 
 Are you tired of doing `git pull` into all your git folders to keep them updated.  
 
