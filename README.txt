@@ -86,3 +86,6 @@ Pulla is available from PyPi
 
 #### Contributors
 Checkout CONTRIBUTION.md file
+
+
+[![wercker status](https://app.wercker.com/status/d8901c704b2e7befa14998731113e38f/m "wercker status")](https://app.wercker.com/project/bykey/d8901c704b2e7befa14998731113e38f)
