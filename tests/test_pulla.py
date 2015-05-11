@@ -115,10 +115,12 @@ class test_perform_git_pull(unittest.TestCase):
         self.directory = 'foo'
         self.puller = Pulla()
 
+    @patch('pulla.pulla.get_git_version')
     @patch('os.system')
-    def test_pull_done_silently_when_no_verbosity(self, mock_os_system_cmd):
+    def test_pull_done_silently_when_no_verbosity(self, mock_git_ver, mock_os_system_cmd):
         expected_status = 128
         mock_os_system_cmd.return_value = expected_status
+        mock_git_ver.return_value = '2.2.2'
         expected_cmd = 'git -C foo pull &> /dev/null'
 
         status = self.puller.perform_git_pull(self.directory)
@@ -126,9 +128,11 @@ class test_perform_git_pull(unittest.TestCase):
         mock_os_system_cmd.assert_called_once_with(expected_cmd)
         self.assertEqual(status, expected_status)
 
+    @patch('pulla.pulla.get_git_version')
     @patch('os.system')
-    def test_pull_done_when_verbosity_level_set_one(self, mock_os_system):
+    def test_pull_done_when_verbosity_level_set_one(self, mock_git_ver, mock_os_system):
         self.puller.verbosity = 1
+        mock_git_ver.return_value = '2.2.2'
         expected_cmd = 'git -C foo pull --verbose'
 
         self.puller.perform_git_pull(self.directory)
