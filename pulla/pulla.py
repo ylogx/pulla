@@ -2,6 +2,8 @@ from __future__ import print_function
 
 import os
 import multiprocessing
+import logging
+
 from .utils import is_this_a_git_dir
 from .logger import Logger
 
@@ -15,6 +17,7 @@ class Pulla:
                             verbosity)
         self.recursive = recursive
         self.max_dir_length = 20
+        self.logger = Logger(verbosity)
 
     def pull_all(self, folder):
         for (_, dirnames, _) in os.walk(folder):
@@ -37,15 +40,15 @@ class Pulla:
         return max_dir_length
 
     def do_pull_in(self, directory):
-        if self.verbosity:
-            print('----------------------')
         status = self.perform_git_pull(directory)
         status_msg = 'Fail'
         if status == 0:
             status_msg = 'Success'
-        print(self.get_formatted_status_message(directory, status_msg))
-        if self.verbosity:
-            print('----------------------')
+
+        self.logger.print_log(logging.INFO, '----------------------')
+        self.logger.print_log(logging.INFO, self.get_formatted_status_message(directory, status_msg))
+        self.logger.print_log(logging.INFO, '----------------------')
+
 
     def perform_git_pull(self, directory):
         can_use_c_flag = self.get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
