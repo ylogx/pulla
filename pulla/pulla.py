@@ -3,14 +3,16 @@ from __future__ import print_function
 import os
 import multiprocessing
 from .utils import is_this_a_git_dir
+from .logger import Logger
 
 VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
 
 class Pulla:
     ''' Pulla class
     '''
-    def __init__(self, verbosity=None, recursive=None):
-        self.verbosity = verbosity
+    def __init__(self, verbosity=0, recursive=None):
+        self.verbosity = Logger.get_verbosity_level_from_logging_module(
+                            verbosity)
         self.recursive = recursive
         self.max_dir_length = 20
 
