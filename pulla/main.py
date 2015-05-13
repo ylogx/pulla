@@ -9,7 +9,6 @@ import argparse
 from .pulla import Pulla
 from .utils import is_this_a_git_dir
 
-
 def parse_known_args():
     """ Parse command line arguments
     """
@@ -42,9 +41,11 @@ def main():
     if args.folder:
         directory = args.folder
 
-    verbosity = None
+    verbosity = 0
     if args.verbose:
         verbosity = 1
+    elif args.verbosity:
+        verbosity = args.verbosity
 
     pulla = Pulla(verbosity=verbosity, recursive=False)
 
