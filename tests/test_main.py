@@ -68,10 +68,10 @@ class TestMain(unittest.TestCase):
         mock_pull_all.return_value = 0
 
 
-
 class AnyStringContaining(str):
     def __eq__(self, other):
         return self in other
+
 
 if __name__ == '__main__':
     unittest.main()
