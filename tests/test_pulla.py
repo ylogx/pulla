@@ -19,7 +19,7 @@ from pulla.pulla import Pulla
 @patch('os.walk')
 @patch('pulla.pulla.is_this_a_git_dir')
 @patch('multiprocessing.Process')
-class test_pull_all(unittest.TestCase):
+class TestPullAll(unittest.TestCase):
 
     def setUp(self):
         self.directories_folder = ('a', 'b', 'c')
@@ -82,7 +82,7 @@ class test_pull_all(unittest.TestCase):
 
 
 @patch('pulla.pulla.Pulla.perform_git_pull')
-class test_do_pull_in(unittest.TestCase):
+class TestDoPullIn(unittest.TestCase):
 
     def setUp(self):
         self.directory = 'foo'
@@ -110,7 +110,7 @@ class test_do_pull_in(unittest.TestCase):
         mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Fail')
 
 
-class test_perform_git_pull(unittest.TestCase):
+class TestPerformGitPull(unittest.TestCase):
     def setUp(self):
         self.directory = 'foo'
         self.puller = Pulla()

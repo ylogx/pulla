@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#=====================
+
 from __future__ import print_function
 
 try:
@@ -15,14 +15,15 @@ import os
 
 from pulla.utils import is_this_a_git_dir, get_git_version
 
-class test_that_need_a_git_directory(unittest.TestCase):
+
+class TestThatNeedAGitDirectory(unittest.TestCase):
     def test_is_this_a_git_dir_returns_false_for_non_git_dir(self):
         random_directory = 'random_non_git_directory'
         self.assertFalse(is_this_a_git_dir(random_directory))
 
     @patch('os.path.isdir')
     def test_is_this_a_git_dir_returns_true_for_git_dir(self, mock_is_dir):
-        test_dir= 'dummy_dir'
+        test_dir = 'dummy_dir'
         possible_git_dir = os.path.join(test_dir, '.git')
         mock_is_dir.return_value = True
 
@@ -35,7 +36,7 @@ class test_that_need_a_git_directory(unittest.TestCase):
         self.assertFalse(is_this_a_git_dir(None))
 
 
-class test_get_git_version(unittest.TestCase):
+class TestGetGitVersion(unittest.TestCase):
     def setUp(self):
         self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
 
@@ -56,7 +57,7 @@ class test_get_git_version(unittest.TestCase):
             call('git --version'),
             call().read(),
             call().close(),
-            ]
+        ]
         mock_popen.assert_has_calls(calls)
 
 
