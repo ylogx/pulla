@@ -14,6 +14,9 @@ class Logger:
         self.logger_handle.setLevel(logging_level)
         self.logger_handle.addHandler(stream_handle)
 
+    def print_log(self, level, msg):
+        self.logger_handle.log(level, msg)
+
     @staticmethod
     def get_verbosity_level_from_logging_module(level):
 
@@ -31,16 +34,3 @@ class Logger:
             verbosity = logging.DEBUG
 
         return verbosity
-
-    def print_log(self, level, msg):
-
-         if level == logging.CRITICAL:
-             self.logger_handle.critical(msg)
-         elif level == logging.ERROR:
-             self.logger_handle.error(msg)
-         elif level == logging.WARNING:
-             self.logger_handle.warning(msg)
-         elif level == logging.INFO:
-             self.logger_handle.info(msg)
-         elif level == logging.DEBUG:
-             self.logger_handle.debug(msg)
