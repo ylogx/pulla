@@ -26,7 +26,6 @@ def main():
     """ Main
     """
     args, otherthings = parse_known_args()
-    argc = len(otherthings)
 
     directory = os.path.abspath(os.curdir)
     if args.folder:
