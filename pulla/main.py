@@ -43,7 +43,7 @@ def main():
 
     verbosity = 0
     if args.verbose:
-        verbosity = 5
+        verbosity = 1
     elif args.verbosity:
         verbosity = args.verbosity
 
