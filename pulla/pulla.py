@@ -17,7 +17,7 @@ class Pulla:
                             verbosity)
         self.recursive = recursive
         self.max_dir_length = 20
-        self.logger = Logger(verbosity)
+        self.logger = Logger(self.verbosity)
 
     def pull_all(self, folder):
         for (_, dirnames, _) in os.walk(folder):
@@ -57,7 +57,7 @@ class Pulla:
         else:
             os.chdir(directory)
             cmd = 'git pull'
-        if self.verbosity:
+        if self.verbosity is not 0:
             cmd += ' --verbose'
         else:
             cmd += ' &> /dev/null'

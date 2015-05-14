@@ -9,7 +9,8 @@ class Logger:
         stream_handle = logging.StreamHandler(sys.stdout)
         stream_handle.setFormatter(log_format)
 
-        self.logger_handle = logging.getLogger()
+        self.logger_handle = logging.getLogger(__name__)
+        #all logs higher than the specified log_level are processed
         self.logger_handle.setLevel(logging_level)
         self.logger_handle.addHandler(stream_handle)
 
@@ -33,13 +34,13 @@ class Logger:
 
     def print_log(self, level, msg):
 
-        if level == logging.CRITICAL:
-            self.logger_handle.critical(msg)
-        elif level == logging.ERROR:
-            self.logger_handle.error(msg)
-        elif level == logging.WARNING:
-            self.logger_handle.warning(msg)
-        elif level == logging.INFO:
-            self.logger_handle.info(msg)
-        elif level == logging.DEBUG:
-            self.logger_handle.debug(msg)
+         if level == logging.CRITICAL:
+             self.logger_handle.critical(msg)
+         elif level == logging.ERROR:
+             self.logger_handle.error(msg)
+         elif level == logging.WARNING:
+             self.logger_handle.warning(msg)
+         elif level == logging.INFO:
+             self.logger_handle.info(msg)
+         elif level == logging.DEBUG:
+             self.logger_handle.debug(msg)
