@@ -39,13 +39,13 @@ class Pulla:
         return max_dir_length
 
     def do_pull_in(self, directory):
+        self.logger.print_log(logging.INFO, '----------------------')
         status = self.perform_git_pull(directory)
         status_msg = 'Fail'
         if status == 0:
             status_msg = 'Success'
 
-        self.logger.print_log(logging.INFO, '----------------------')
-        self.logger.print_log(logging.INFO, self.get_formatted_status_message(directory, status_msg))
+        self.logger.print_log(logging.CRITICAL, self.get_formatted_status_message(directory, status_msg))
         self.logger.print_log(logging.INFO, '----------------------')
 
 
