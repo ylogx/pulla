@@ -13,8 +13,7 @@ class Pulla:
     ''' Pulla class
     '''
     def __init__(self, verbosity=0, recursive=None):
-        self.verbosity = Logger.get_verbosity_level_from_logging_module(
-                            verbosity)
+        self.verbosity = verbosity
         self.recursive = recursive
         self.max_dir_length = 20
         self.logger = Logger(self.verbosity)

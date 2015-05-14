@@ -1,10 +1,10 @@
 import sys
 import logging
 
+
 class Logger:
-
-    def __init__(self, logging_level):
-
+    def __init__(self, verbosity):
+        logging_level = self.get_verbosity_level_from_logging_module(verbosity)
         log_format = logging.Formatter('%(message)s')
         stream_handle = logging.StreamHandler(sys.stdout)
         stream_handle.setFormatter(log_format)
