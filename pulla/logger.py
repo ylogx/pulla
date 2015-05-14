@@ -18,19 +18,16 @@ class Logger:
         self.logger_handle.log(level, msg)
 
     @staticmethod
-    def get_verbosity_level_from_logging_module(level):
-
-        verbosity = logging.NOTSET
-
-        if level == 1:
-            verbosity = logging.CRITICAL
-        elif level == 2:
-            verbosity = logging.ERROR
-        elif level == 3:
-            verbosity = logging.WARNING
-        elif level == 4:
-            verbosity = logging.INFO
-        elif level == 5:
-            verbosity = logging.DEBUG
-
-        return verbosity
+    def get_verbosity_level_from_logging_module(verbosity):
+        level = logging.NOTSET
+        if verbosity == 1:
+            level = logging.CRITICAL
+        elif verbosity == 2:
+            level = logging.ERROR
+        elif verbosity == 3:
+            level = logging.WARNING
+        elif verbosity == 4:
+            level = logging.INFO
+        elif verbosity == 5:
+            level = logging.DEBUG
+        return level
