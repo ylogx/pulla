@@ -5,15 +5,15 @@ from __future__ import print_function
 try:
     import unittest
     import unittest.mock
-    from unittest.mock import patch
+    from unittest.mock import call, patch
 except ImportError as e:
     import unittest2 as unittest
     import mock
-    from mock import patch
+    from mock import call, patch
 
 import os
 
-from pulla.utils import is_this_a_git_dir
+from pulla.utils import is_this_a_git_dir, get_git_version
 
 class test_that_need_a_git_directory(unittest.TestCase):
     def test_is_this_a_git_dir_returns_false_for_non_git_dir(self):
@@ -33,6 +33,32 @@ class test_that_need_a_git_directory(unittest.TestCase):
 
     def test_is_this_a_git_dir_returns_false_for_null_dir(self):
         self.assertFalse(is_this_a_git_dir(None))
+
+
+class test_get_git_version(unittest.TestCase):
+    def setUp(self):
+        self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
+
+    @unittest.skip
+    @patch.object('os.popen', 'read')
+    def test_correct_git_version_returned(self, mock_popen):
+        mock_popen.return_value = self.GIT_VERSION_RESPONSE
+
+        git_version = get_git_version()
+
+        self.assertEqual(git_version, '2.2.2')
+
+    @patch('os.popen')
+    def test_opened_stream_is_closed(self, mock_popen):
+        get_git_version()
+
+        calls = [
+            call('git --version'),
+            call().read(),
+            call().close(),
+            ]
+        mock_popen.assert_has_calls(calls)
+
 
 if __name__ == '__main__':
     unittest.main()

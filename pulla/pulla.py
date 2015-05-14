@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import os
 import multiprocessing
-from .utils import is_this_a_git_dir
+from .utils import is_this_a_git_dir, get_git_version
 
 VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
 
@@ -46,7 +46,7 @@ class Pulla:
             print('----------------------')
 
     def perform_git_pull(self, directory):
-        can_use_c_flag = self.get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
+        can_use_c_flag = get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
         if can_use_c_flag:
             cmd = 'git -C ' + directory + ' pull'
         else:
@@ -65,8 +65,3 @@ class Pulla:
         format_string = '{0:<' + str(self.max_dir_length + 10) + '} {1:<10}'
         return format_string.format(os.path.join(directory), status_msg)
 
-    def get_git_version(self):
-        han = os.popen('git --version')
-        version_string = han.read()
-        han.close()
-        return version_string.split()[-1]

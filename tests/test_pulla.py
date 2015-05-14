@@ -115,7 +115,7 @@ class test_perform_git_pull(unittest.TestCase):
         self.directory = 'foo'
         self.puller = Pulla()
 
-    @patch('pulla.pulla.Pulla.get_git_version')
+    @patch('pulla.pulla.get_git_version')
     @patch('os.system')
     def test_pull_done_silently_when_no_verbosity(self, mock_os_system_cmd, mock_git_ver):
         expected_status = 128
@@ -128,7 +128,7 @@ class test_perform_git_pull(unittest.TestCase):
         mock_os_system_cmd.assert_called_once_with(expected_cmd)
         self.assertEqual(status, expected_status)
 
-    @patch('pulla.pulla.Pulla.get_git_version')
+    @patch('pulla.pulla.get_git_version')
     @patch('os.system')
     def test_pull_done_when_verbosity_level_set_one(self, mock_os_system, mock_git_ver):
         self.puller.verbosity = 1
@@ -138,32 +138,6 @@ class test_perform_git_pull(unittest.TestCase):
         self.puller.perform_git_pull(self.directory)
 
         mock_os_system.assert_called_once_with(expected_cmd)
-
-
-class test_get_git_version(unittest.TestCase):
-    def setUp(self):
-        self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
-        self.puller = Pulla()
-
-    @unittest.skip
-    @patch.object('os.popen', 'read')
-    def test_correct_git_version_returned(self, mock_popen):
-        mock_popen.return_value = self.GIT_VERSION_RESPONSE
-
-        git_version = self.puller.get_git_version()
-
-        self.assertEqual(git_version, '2.2.2')
-
-    @patch('os.popen')
-    def test_opened_stream_is_closed(self, mock_popen):
-        self.puller.get_git_version()
-
-        calls = [
-            call('git --version'),
-            call().read(),
-            call().close(),
-        ]
-        mock_popen.assert_has_calls(calls)
 
 
 if __name__ == '__main__':
