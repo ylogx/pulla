@@ -14,7 +14,7 @@ except ImportError as e:
     from mock import patch
     from mock import call
 
-from pulla.pulla import Pulla
+from pulla import Pulla
 
 @patch('os.walk')
 @patch('pulla.pulla.is_this_a_git_dir')
