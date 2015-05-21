@@ -23,8 +23,8 @@ def parse_known_args():
                         'flag')
     mutually_exclusive_group.add_argument('-l', '--verbosity', type=int,
                         help='Set higher verbosity level for more detailed '
-                        'information: 1. Critical, 2. Error, 3. Warning, '
-                        '4. Info, 5. Debug', choices=range(1, 6))
+                        'information: 1. Low, 2. Medium, 3. High',
+                        choices=range(1, 4))
 
 
     args, otherthings = parser.parse_known_args()
@@ -42,7 +42,7 @@ def main():
 
     verbosity = 0
     if args.verbose:
-        verbosity = 1
+        verbosity = 1       #TODO: What should this value be now?
     elif args.verbosity:
         verbosity = args.verbosity
 
