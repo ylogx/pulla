@@ -2,6 +2,11 @@ import sys
 import logging
 
 
+LEVELS = { 'high': logging.DEBUG,
+           'medium': logging.INFO,
+           'low': logging.WARNING
+        }
+
 class Logger:
     def __init__(self, verbosity):
         logging_level = self.get_verbosity_level_from_logging_module(verbosity)
