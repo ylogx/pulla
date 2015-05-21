@@ -2,11 +2,6 @@ import sys
 import logging
 
 
-LEVELS = { 'high': logging.DEBUG,
-           'medium': logging.INFO,
-           'low': logging.WARNING
-        }
-
 class Logger:
     def __init__(self, verbosity):
         logging_level = self.get_verbosity_level_from_logging_module(verbosity)
@@ -15,7 +10,7 @@ class Logger:
         stream_handle.setFormatter(log_format)
 
         self.logger_handle = logging.getLogger(__name__)
-        #all logs higher than the specified log_level are processed
+        # all logs higher than the specified log_level are processed
         self.logger_handle.setLevel(logging_level)
         self.logger_handle.addHandler(stream_handle)
 

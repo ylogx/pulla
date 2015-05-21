@@ -16,6 +16,7 @@ except ImportError as e:
 
 from pulla import Logger
 
+
 class TestGetVerbosityLevel(unittest.TestCase):
     def setUp(self):
         self.logger = Logger(3)

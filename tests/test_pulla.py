@@ -16,20 +16,21 @@ except ImportError as e:
 
 from pulla import Pulla
 
+
 @patch('os.walk')
 @patch('pulla.pulla.is_this_a_git_dir')
 @patch('multiprocessing.Process')
 class TestPullAll(unittest.TestCase):
-
     def setUp(self):
         self.directories_folder = ('a', 'b', 'c')
         self.directory_sub_folder = ('d', 'e', 'f')
 
-    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
+    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess,
+                                                                                        mock_is_git, mock_walk):
         mock_walk.return_value = [
             ('foo', self.directories_folder, ('baz',)),
             ('foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
-            ]
+        ]
         mock_is_git.return_value = True
 
         puller = Pulla()
@@ -48,7 +49,7 @@ class TestPullAll(unittest.TestCase):
         mock_walk.return_value = [
             ('foo', self.directories_folder, ('baz',)),
             ('foo/bar', self.directory_sub_folder, ('spam', 'eggs')),
-            ]
+        ]
         mock_is_git.return_value = True
 
         puller = Pulla(recursive=True)
@@ -83,7 +84,6 @@ class TestPullAll(unittest.TestCase):
 
 @patch('pulla.pulla.Pulla.perform_git_pull')
 class TestDoPullIn(unittest.TestCase):
-
     def setUp(self):
         self.directory = 'foo'
         self.puller = Pulla()
