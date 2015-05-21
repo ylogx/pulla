@@ -17,28 +17,23 @@ except ImportError as e:
 from pulla import Logger
 
 class TestGetVerbosityLevel(unittest.TestCase):
+    def setUp(self):
+        self.logger = Logger(3)
+
     def test_should_get_critical_for_1(self):
-        self.assertEqual(Logger.get_verbosity_level_from_logging_module(1),
-                         logging.CRITICAL)
-
-    def test_should_get_error_for_2(self):
-        self.assertEqual(Logger.get_verbosity_level_from_logging_module(2),
-                         logging.ERROR)
-
-    def test_should_get_warning_for_3(self):
-        self.assertEqual(Logger.get_verbosity_level_from_logging_module(3),
+        self.assertEqual(self.logger.get_verbosity_level_from_logging_module(1),
                          logging.WARNING)
 
-    def test_should_get_info_for_4(self):
-        self.assertEqual(Logger.get_verbosity_level_from_logging_module(4),
+    def test_should_get_error_for_2(self):
+        self.assertEqual(self.logger.get_verbosity_level_from_logging_module(2),
                          logging.INFO)
 
-    def test_should_get_debug_for_5(self):
-        self.assertEqual(Logger.get_verbosity_level_from_logging_module(5),
+    def test_should_get_warning_for_3(self):
+        self.assertEqual(self.logger.get_verbosity_level_from_logging_module(3),
                          logging.DEBUG)
 
 
-class TestPrintLog(unittest.TestCase):
+class TestLogger(unittest.TestCase):
     def setUp(self):
         self.logger = Logger(3)
 
