@@ -14,22 +14,23 @@ except ImportError as e:
     from mock import patch
     from mock import call
 
-from pulla.pulla import Pulla
+from pulla import Pulla
+
 
 @patch('os.walk')
 @patch('pulla.pulla.is_this_a_git_dir')
 @patch('multiprocessing.Process')
-class test_pull_all(unittest.TestCase):
-
+class TestPullAll(unittest.TestCase):
     def setUp(self):
         self.directories_folder = ('a', 'b', 'c')
         self.directory_sub_folder = ('d', 'e', 'f')
 
-    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
+    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess,
+                                                                                        mock_is_git, mock_walk):
         mock_walk.return_value = [
             ('foo', self.directories_folder, ('baz',)),
             ('foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
-            ]
+        ]
         mock_is_git.return_value = True
 
         puller = Pulla()
@@ -48,7 +49,7 @@ class test_pull_all(unittest.TestCase):
         mock_walk.return_value = [
             ('foo', self.directories_folder, ('baz',)),
             ('foo/bar', self.directory_sub_folder, ('spam', 'eggs')),
-            ]
+        ]
         mock_is_git.return_value = True
 
         puller = Pulla(recursive=True)
@@ -82,8 +83,7 @@ class test_pull_all(unittest.TestCase):
 
 
 @patch('pulla.pulla.Pulla.perform_git_pull')
-class test_do_pull_in(unittest.TestCase):
-
+class TestDoPullIn(unittest.TestCase):
     def setUp(self):
         self.directory = 'foo'
         self.puller = Pulla()
@@ -110,12 +110,12 @@ class test_do_pull_in(unittest.TestCase):
         mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Fail')
 
 
-class test_perform_git_pull(unittest.TestCase):
+class TestPerformGitPull(unittest.TestCase):
     def setUp(self):
         self.directory = 'foo'
         self.puller = Pulla()
 
-    @patch('pulla.pulla.Pulla.get_git_version')
+    @patch('pulla.pulla.get_git_version')
     @patch('os.system')
     def test_pull_done_silently_when_no_verbosity(self, mock_os_system_cmd, mock_git_ver):
         expected_status = 128
@@ -128,7 +128,7 @@ class test_perform_git_pull(unittest.TestCase):
         mock_os_system_cmd.assert_called_once_with(expected_cmd)
         self.assertEqual(status, expected_status)
 
-    @patch('pulla.pulla.Pulla.get_git_version')
+    @patch('pulla.pulla.get_git_version')
     @patch('os.system')
     def test_pull_done_when_verbosity_level_set_one(self, mock_os_system, mock_git_ver):
         self.puller.verbosity = 1
@@ -138,32 +138,6 @@ class test_perform_git_pull(unittest.TestCase):
         self.puller.perform_git_pull(self.directory)
 
         mock_os_system.assert_called_once_with(expected_cmd)
-
-
-class test_get_git_version(unittest.TestCase):
-    def setUp(self):
-        self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
-        self.puller = Pulla()
-
-    @unittest.skip
-    @patch.object('os.popen', 'read')
-    def test_correct_git_version_returned(self, mock_popen):
-        mock_popen.return_value = self.GIT_VERSION_RESPONSE
-
-        git_version = self.puller.get_git_version()
-
-        self.assertEqual(git_version, '2.2.2')
-
-    @patch('os.popen')
-    def test_opened_stream_is_closed(self, mock_popen):
-        self.puller.get_git_version()
-
-        calls = [
-            call('git --version'),
-            call().read(),
-            call().close(),
-        ]
-        mock_popen.assert_has_calls(calls)
 
 
 if __name__ == '__main__':
