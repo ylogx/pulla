@@ -21,7 +21,7 @@ except (IOError, ImportError):
 setup(
         name='Pulla',
         description='Pulla helps you pull content from all repos in any folder',
-        version='0.0.7',
+        version='0.0.8',
         packages=['pulla'],
         license='GPLv3+',
         author='Shubham Chaudhary',
