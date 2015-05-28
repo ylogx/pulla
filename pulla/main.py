@@ -16,8 +16,18 @@ def parse_known_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--folder', type=str, dest='folder',
                         help='Update the repos in this folder')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='Show verbose information. Higher verbosity can be selected by --verbosity flag')
+    mutually_exclusive_group = parser.add_mutually_exclusive_group()
+
+    mutually_exclusive_group.add_argument('-v', '--verbose',
+                                          action='store_true',
+                                          help='Show verbose information.'
+                                               ' Higher verbosity can be selected by --verbosity'
+                                               ' flag')
+    mutually_exclusive_group.add_argument('-l', '--verbosity', type=int,
+                                          help='Set higher verbosity level for more detailed'
+                                               ' information: 1. Low, 2. Medium, 3. High',
+                                          choices=range(1, 4))
+
     args, otherthings = parser.parse_known_args()
     return args, otherthings
 
@@ -31,9 +41,11 @@ def main():
     if args.folder:
         directory = args.folder
 
-    verbosity = None
+    verbosity = 0
     if args.verbose:
-        verbosity = 1
+        verbosity = 1  # TODO: What should this value be now?
+    elif args.verbosity:
+        verbosity = args.verbosity
 
     pulla = Pulla(verbosity=verbosity, recursive=False)
 
@@ -41,6 +53,7 @@ def main():
         pulla.do_pull_in(directory)
     else:
         pulla.pull_all(directory)
+
 
 if __name__ == '__main__':
     sys.exit(main())
