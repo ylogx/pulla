@@ -1,6 +1,10 @@
 import sys
 import logging
 
+verbosity_level ={  'low': 1,
+                    'medium': 2,
+                    'high': 3
+                    }
 
 class Logger:
     def __init__(self, verbosity):
