@@ -8,6 +8,7 @@ import argparse
 
 from .pulla import Pulla
 from .utils import is_this_a_git_dir
+from .logger import verbosity_level
 
 
 def parse_known_args():
@@ -43,7 +44,7 @@ def main():
 
     verbosity = 0
     if args.verbose:
-        verbosity = 1  # TODO: What should this value be now?
+        verbosity = verbosity_level['low']
     elif args.verbosity:
         verbosity = args.verbosity
 

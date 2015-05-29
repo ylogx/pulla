@@ -5,6 +5,7 @@ import multiprocessing
 
 from .utils import is_this_a_git_dir, get_git_version
 from .logger import Logger
+from .logger import verbosity_level
 
 VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
 
@@ -40,14 +41,14 @@ class Pulla:
         return max_dir_length
 
     def do_pull_in(self, directory):
-        self.logger.print_log('----------------------', verbosity=3)
+        self.logger.print_log('----------------------', verbosity_level['high'])
         status = self.perform_git_pull(directory)
         status_msg = 'Fail'
         if status == 0:
             status_msg = 'Success'
 
-        self.logger.print_log(self.get_formatted_status_message(directory, status_msg), verbosity=1)
-        self.logger.print_log('----------------------', verbosity=3)
+        self.logger.print_log(self.get_formatted_status_message(directory, status_msg), verbosity_level['low'])
+        self.logger.print_log('----------------------', verbosity_level['high'])
 
     def perform_git_pull(self, directory):
         can_use_c_flag = get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
