@@ -28,7 +28,9 @@ class TestMain(unittest.TestCase):
         sys.argv = self.argv_backup
 
     @patch('pulla.main.is_this_a_git_dir')
-    def test_should_do_pull_in_subdirectories_if_no_args(self, mock_is_git_dir, mock_do_pull_in, mock_pull_all):
+    def test_should_do_pull_in_subdirectories_if_no_args(self, mock_is_git_dir,
+                                                         mock_do_pull_in,
+                                                         mock_pull_all):
         self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy']
         mock_is_git_dir.return_value = False
@@ -39,7 +41,9 @@ class TestMain(unittest.TestCase):
         mock_pull_all.assert_called_once_with(curdir)
 
     @patch('pulla.main.is_this_a_git_dir')
-    def test_should_do_pull_in_current_directory_if_is_git_dir(self, mock_is_git_dir, mock_do_pull_in, mock_pull_all):
+    def test_should_do_pull_in_current_directory_if_is_git_dir(
+        self, mock_is_git_dir, mock_do_pull_in, mock_pull_all
+    ):
         self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         curdir = os.path.abspath(os.curdir)
         sys.argv = ['dummy']
@@ -50,14 +54,18 @@ class TestMain(unittest.TestCase):
         mock_do_pull_in.assert_called_once_with(curdir)
 
     @patch('pulla.main.Pulla')
-    def test_should_set_verbosity_1_if_short_flag_passed(self, mock_pulla, mock_do_pull_in, mock_pull_all):
+    def test_should_set_verbosity_1_if_short_flag_passed(self, mock_pulla,
+                                                         mock_do_pull_in,
+                                                         mock_pull_all):
         self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy', '-v']
         main()
         mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
 
     @patch('pulla.main.Pulla')
-    def test_should_set_verbosity_1_if_long_flag_passed(self, mock_pulla, mock_do_pull_in, mock_pull_all):
+    def test_should_set_verbosity_1_if_long_flag_passed(self, mock_pulla,
+                                                        mock_do_pull_in,
+                                                        mock_pull_all):
         self.ensure_no_git_pull_done(mock_do_pull_in, mock_pull_all)
         sys.argv = ['dummy', '--verbose']
         main()

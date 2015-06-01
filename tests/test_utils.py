@@ -53,11 +53,7 @@ class TestGetGitVersion(unittest.TestCase):
     def test_opened_stream_is_closed(self, mock_popen):
         get_git_version()
 
-        calls = [
-            call('git --version'),
-            call().read(),
-            call().close(),
-        ]
+        calls = [call('git --version'), call().read(), call().close(), ]
         mock_popen.assert_has_calls(calls)
 
 

@@ -26,7 +26,8 @@ class Pulla:
             self.max_dir_length = self.find_max_dir_length(directories)
             for directory in directories:
                 if is_this_a_git_dir(directory):
-                    process = multiprocessing.Process(target=self.do_pull_in, args=[directory])
+                    process = multiprocessing.Process(target=self.do_pull_in,
+                                                      args=[directory])
                     process.start()
                     threads.append(process)
             if not self.recursive:
@@ -41,14 +42,17 @@ class Pulla:
         return max_dir_length
 
     def do_pull_in(self, directory):
-        self.logger.print_log('----------------------', verbosity_level['high'])
+        self.logger.print_log('----------------------',
+                              verbosity_level['high'])
         status = self.perform_git_pull(directory)
         status_msg = 'Fail'
         if status == 0:
             status_msg = 'Success'
 
-        self.logger.print_log(self.get_formatted_status_message(directory, status_msg), verbosity_level['low'])
-        self.logger.print_log('----------------------', verbosity_level['high'])
+        self.logger.print_log(self.get_formatted_status_message(
+            directory, status_msg), verbosity_level['low'])
+        self.logger.print_log('----------------------',
+                              verbosity_level['high'])
 
     def perform_git_pull(self, directory):
         can_use_c_flag = get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
