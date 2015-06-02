@@ -2,11 +2,13 @@ TEST_FILES = $(wildcard tests/test_*.py)
 TESTS = $(subst .py,,$(subst /,.,$(TEST_FILES)))
 VERSION = $(shell cat setup.py | grep version | sed -e "s/version=//" -e "s/'//g" -e "s/,//" -e 's/^[ \t]*//')
 
-all.PHONY: nosetests_2_3
+all.PHONY: nosetests_3 nosetests_2
 
-nosetests_2_3:
+nosetests_2:
 	@echo "Running python2 tests"
 	@python2.7 `which nosetests`
+
+nosetests_3:
 	@echo "Running python3 tests"
 	@python3 `which nosetests`
 
