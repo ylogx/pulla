@@ -1,6 +1,8 @@
+PACKAGE="Pulla"
+PACKAGE_LOWER=$(shell echo $(PACKAGE) | sed 's/.*/\L&/')
+VERSION = $(shell python -c 'import $(PACKAGE_LOWER); print($(PACKAGE_LOWER).__version__)')
 TEST_FILES = $(wildcard tests/test_*.py)
 TESTS = $(subst .py,,$(subst /,.,$(TEST_FILES)))
-VERSION = $(shell cat setup.py | grep version | sed -e "s/version=//" -e "s/'//g" -e "s/,//" -e 's/^[ \t]*//')
 
 all.PHONY: nosetests_3 nosetests_2
 
@@ -18,7 +20,7 @@ install:
 	python setup.py sdist
 	@echo "Installing package using pip"
 	@echo "----------------------------"
-	pip install --upgrade dist/Pulla-$(VERSION).tar.gz
+	pip install --upgrade dist/$(PACKAGE)-$(VERSION).tar.gz
 
 coverage:
 	@coverage run `which nosetests`

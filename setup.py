@@ -1,5 +1,10 @@
 from distutils.core import setup
 
+def get_version():
+    import pulla
+    return pulla.__version__
+
+
 add_keywords = dict(
     entry_points={
         'console_scripts': ['pulla = pulla.main:main'],
@@ -20,7 +25,7 @@ except (IOError, ImportError):
 setup(
     name='Pulla',
     description='Pulla helps you pull content from all repos in any folder',
-    version='0.0.8',
+    version=get_version(),
     packages=['pulla'],
     license='GPLv3+',
     author='Shubham Chaudhary',
