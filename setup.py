@@ -4,23 +4,24 @@ def get_version():
     import pulla
     return pulla.__version__
 
+def get_requirements():
+    with open('requirements.txt', 'rU') as fhan:
+        requires = [line.strip() for line in fhan.readlines()]
+    return requires
+
+def get_long_description():
+    try:
+        import pypandoc
+        long_description = pypandoc.convert('README.md', 'rst')
+    except (IOError, ImportError):
+        with open('README.txt') as fhan:
+            long_description = fhan.read()
+
 
 add_keywords = dict(
     entry_points={
         'console_scripts': ['pulla = pulla.main:main'],
     }, )
-
-fhan = open('requirements.txt', 'rU')
-requires = [line.strip() for line in fhan.readlines()]
-fhan.close()
-#print('We require: ', requires)
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except (IOError, ImportError):
-    fhan = open('README.txt')
-    long_description = fhan.read()
-    fhan.close()
 
 setup(
     name='Pulla',
@@ -31,5 +32,6 @@ setup(
     author='Shubham Chaudhary',
     author_email='me@shubhamchaudhary.in',
     url='https://github.com/shubhamchaudhary/pulla',
-    long_description=long_description,
-    install_requires=requires, **add_keywords)
+    long_description=get_long_description(),
+    install_requires=get_requirements(),
+    **add_keywords)
