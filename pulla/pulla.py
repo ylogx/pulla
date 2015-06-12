@@ -22,10 +22,11 @@ class Pulla:
         self.logger = Logger(self.verbosity)
 
     def pull_all(self, folder):
-        for (_, directories, _) in os.walk(folder):
+        for (dirpath, dirnames, _) in os.walk(os.path.abspath(folder)):
             threads = []
-            self.max_dir_length = self.find_max_dir_length(directories)
-            for directory in directories:
+            self.max_dir_length = self.find_max_dir_length(dirnames)
+            for directory in dirnames:
+                directory = os.path.join(dirpath, directory)
                 if is_this_a_git_dir(directory):
                     process = multiprocessing.Process(target=self.do_pull_in,
                                                       args=[directory])
@@ -69,6 +70,7 @@ class Pulla:
         return status
 
     def get_formatted_status_message(self, directory, status):
+        directory = os.path.basename(directory)
         status_msg = Fore.RED + 'Fail' + Fore.RESET
         if status == GitStatus.SUCCESS:
             status_msg = Fore.GREEN + 'Success' + Fore.RESET

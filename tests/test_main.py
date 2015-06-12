@@ -76,6 +76,20 @@ class TestMain(unittest.TestCase):
         mock_pull_all.return_value = 0
 
 
+@patch('pulla.main.print_version')
+class TestVersion(unittest.TestCase):
+    def test_should_print_version_and_exit_with_short_flag(self, mock_print_version):
+        sys.argv = ['dummy', '-V']
+        out = main()
+        mock_print_version.assert_called_once_with()
+        self.assertEqual(out, 0)
+
+    def test_should_print_version_and_exit_with_long_flag(self, mock_print_version):
+        sys.argv = ['dummy', '--version']
+        out = main()
+        mock_print_version.assert_called_once_with()
+        self.assertEqual(out, 0)
+
 class AnyStringContaining(str):
     def __eq__(self, other):
         return self in other
