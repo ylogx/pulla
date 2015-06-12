@@ -6,9 +6,18 @@ import sys
 import os
 import argparse
 
+from . import __version__
 from .pulla import Pulla
 from .utils import is_this_a_git_dir
 from .logger import verbosity_level
+
+
+def print_version():
+    print('Pulla version %s' % __version__)
+    print('Copyright (c) 2015 by Shubham Chaudhary.')
+    print('License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>')
+    print('This is free software: you are free to change and redistribute it.')
+    print('There is NO WARRANTY, to the extent permitted by law.')
 
 
 def parse_known_args():
@@ -19,6 +28,10 @@ def parse_known_args():
                         type=str,
                         dest='folder',
                         help='Update the repos in this folder')
+    parser.add_argument('-V', '--version',
+                        action='store_true',
+                        dest='version',
+                        help='Print the version number and exit')
     mutually_exclusive_group = parser.add_mutually_exclusive_group()
 
     mutually_exclusive_group.add_argument(
@@ -42,6 +55,10 @@ def main():
     """ Main
     """
     args, otherthings = parse_known_args()
+
+    if args.version:
+        print_version()
+        return 0
 
     directory = os.path.abspath(os.curdir)
     if args.folder:
