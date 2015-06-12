@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import os
 import multiprocessing
+from colorama import Fore
 
 from .utils import is_this_a_git_dir, get_git_version
 from .logger import Logger
@@ -45,9 +46,9 @@ class Pulla:
         self.logger.print_log('----------------------',
                               verbosity_level['high'])
         status = self.perform_git_pull(directory)
-        status_msg = 'Fail'
+        status_msg = Fore.RED + 'Fail' + Fore.RESET
         if status == 0:
-            status_msg = 'Success'
+            status_msg = Fore.GREEN + 'Success' + Fore.RESET
 
         self.logger.print_log(self.get_formatted_status_message(
             directory, status_msg), verbosity_level['low'])
