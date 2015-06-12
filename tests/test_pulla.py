@@ -102,7 +102,7 @@ class TestDoPullIn(unittest.TestCase):
         self.puller.do_pull_in(self.directory)
 
         mock_get_formatted_status_message.assert_called_once_with(
-            self.directory, '\x1b[32mSuccess\x1b[39m')
+            self.directory, 0)
 
     @patch('pulla.pulla.Pulla.get_formatted_status_message')
     def test_status_fail_when_git_command_successful(
@@ -113,7 +113,7 @@ class TestDoPullIn(unittest.TestCase):
         self.puller.do_pull_in(self.directory)
 
         mock_get_formatted_status_message.assert_called_once_with(
-            self.directory, '\x1b[31mFail\x1b[39m')
+            self.directory, 128)
 
 
 class TestPerformGitPull(unittest.TestCase):
@@ -146,6 +146,21 @@ class TestPerformGitPull(unittest.TestCase):
         self.puller.perform_git_pull(self.directory)
 
         mock_os_system.assert_called_once_with(expected_cmd)
+
+
+
+class TestGetFormattedMessage(unittest.TestCase):
+    def setUp(self):
+        self.directory = 'foo'
+        self.puller = Pulla()
+
+    def test_proper_success_message_returned(self):
+        out = self.puller.get_formatted_status_message(self.directory, 128)
+        self.assertEqual(out, 'foo                            \x1b[31mFail\x1b[39m')
+
+    def test_proper_fail_message_returned(self):
+        out = self.puller.get_formatted_status_message(self.directory, 0)
+        self.assertEqual(out, 'foo                            \x1b[32mSuccess\x1b[39m')
 
 
 if __name__ == '__main__':

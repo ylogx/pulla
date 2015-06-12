@@ -46,12 +46,9 @@ class Pulla:
         self.logger.print_log('----------------------',
                               verbosity_level['high'])
         status = self.perform_git_pull(directory)
-        status_msg = Fore.RED + 'Fail' + Fore.RESET
-        if status == 0:
-            status_msg = Fore.GREEN + 'Success' + Fore.RESET
 
         self.logger.print_log(self.get_formatted_status_message(
-            directory, status_msg), verbosity_level['low'])
+            directory, status), verbosity_level['low'])
         self.logger.print_log('----------------------',
                               verbosity_level['high'])
 
@@ -71,6 +68,12 @@ class Pulla:
             os.chdir('..')
         return status
 
-    def get_formatted_status_message(self, directory, status_msg):
+    def get_formatted_status_message(self, directory, status):
+        status_msg = Fore.RED + 'Fail' + Fore.RESET
+        if status == GitStatus.SUCCESS:
+            status_msg = Fore.GREEN + 'Success' + Fore.RESET
         format_string = '{0:<' + str(self.max_dir_length + 10) + '} {1:<10}'
         return format_string.format(os.path.join(directory), status_msg)
+
+class GitStatus:
+    SUCCESS = 0
