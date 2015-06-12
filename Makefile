@@ -23,7 +23,7 @@ install:
 	@echo "Creating distribution package for version $(VERSION)"
 	@echo "-----------------------------------------------"
 	$(PYTHON_EXEC) setup.py sdist
-	@echo "Installing package using pip"
+	@echo "Installing package using $(PIP_EXEC)"
 	@echo "----------------------------"
 	$(PIP_EXEC) install --upgrade dist/$(PACKAGE)-$(VERSION).tar.gz
 
@@ -47,3 +47,7 @@ test3:
 		echo === Running python3 test: $(TEST); \
 		$(PYTHON3_EXEC) -m $(TEST) $(PYFLAGS); \
 		)
+
+clean:
+	find . -type f -name '*.pyc' -exec rm {} +
+	find . -type d -name '__pycache__' -exec rm -r {} +
