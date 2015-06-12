@@ -38,25 +38,12 @@ From bitbucket.org:varunest/vdm
 Updating 88fc178..371f66f
 Fast-forward
  app/src/main/AndroidManifest.xml                                            |   8 +-
- app/src/main/assets/parser.js                                               | 898 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------
- app/src/main/java/com/example/downloadhandlers/DownloadReciever.java        |   4 +-
- app/src/main/java/com/example/downloadhandlers/JsObject.java                |  18 +-
- app/src/main/java/com/example/downloadhandlers/MyWebViewClient.java         |  14 +-
- app/src/main/java/com/example/searchhandlers/AsyncGetSearchResults.java     |  34 +++-
- app/src/main/java/com/example/searchhandlers/CustomGridAdapter.java         |   4 +-
- app/src/main/java/com/example/videodownloadmanager/Constants.java           |  14 ++
  app/src/main/java/com/example/videodownloadmanager/MainActivity.java        |  38 ++--
  app/src/main/java/com/example/videodownloadmanager/PlaceholderFragment.java |  15 +-
- app/src/main/java/com/example/videodownloadmanager/SearchableActivity.java  |   6 +-
- app/src/main/res/anim/infinite_slide_in_left.xml                            |   1 -
  app/src/main/res/drawable/action_bar_icon.png                               | Bin
- app/src/main/res/layout/fragment_home.xml                                   |   8 +-
  app/src/main/res/menu/main.xml                                              |  14 +-
- app/src/main/res/menu/search_menu.xml                                       |   7 +-
- app/src/main/res/values-v11/styles.xml                                      |   3 +-
  app/src/main/res/values/styles.xml                                          |   5 +-
- 18 files changed, 870 insertions(+), 221 deletions(-)
- mode change 100644 => 100755 app/src/main/assets/parser.js
+ 6 files changed, 87 insertions(+), 22 deletions(-)
  create mode 100644 app/src/main/java/com/example/videodownloadmanager/Constants.java
  mode change 100644 => 100755 app/src/main/res/drawable/action_bar_icon.png
 ----------------------
