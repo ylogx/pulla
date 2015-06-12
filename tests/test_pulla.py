@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import os
 from itertools import chain
 
 try:
@@ -37,11 +38,12 @@ class TestPullAll(unittest.TestCase):
         puller = Pulla()
         puller.pull_all('foo')
 
-        calls = [call('a'), call('b'), call('c')]
+        directories_folder_to_be_pulled = [os.path.join('foo', dir) for dir in self.directories_folder]
+        calls = [call(dir) for dir in directories_folder_to_be_pulled]
         mock_is_git.assert_has_calls(calls)
 
         calls_for_process_creation = self.get_calls_for_process_creation(
-            self.directories_folder, puller)
+            directories_folder_to_be_pulled, puller)
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
 
     def test_pull_all_starts_process_for_all_folders_when_recursive(
@@ -56,8 +58,7 @@ class TestPullAll(unittest.TestCase):
         puller = Pulla(recursive=True)
         puller.pull_all('foo')
 
-        directories_to_be_pulled = self.directories_folder + self.directory_sub_folder
-
+        directories_to_be_pulled = [os.path.join('foo', dir) for dir in self.directories_folder] + [os.path.join('foo', 'bar', dir) for dir in self.directory_sub_folder]
         calls_for_process_creation = self.get_calls_for_process_creation(
             directories_to_be_pulled, puller)
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
