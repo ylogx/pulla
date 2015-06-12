@@ -1,6 +1,8 @@
 import sys
 import logging
 
+verbosity_level = {'low': 1, 'medium': 2, 'high': 3}
+
 
 class Logger:
     def __init__(self, verbosity):
@@ -20,10 +22,10 @@ class Logger:
 
     def get_verbosity_level_from_logging_module(self, verbosity):
         level = logging.NOTSET
-        if verbosity == 1:
+        if verbosity == verbosity_level['low']:
             level = logging.WARNING
-        elif verbosity == 2:
+        elif verbosity == verbosity_level['medium']:
             level = logging.INFO
-        elif verbosity == 3:
+        elif verbosity == verbosity_level['high']:
             level = logging.DEBUG
         return level

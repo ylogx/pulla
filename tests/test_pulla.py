@@ -25,10 +25,11 @@ class TestPullAll(unittest.TestCase):
         self.directories_folder = ('a', 'b', 'c')
         self.directory_sub_folder = ('d', 'e', 'f')
 
-    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(self, mock_multiprocess,
-                                                                                        mock_is_git, mock_walk):
+    def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(
+        self, mock_multiprocess, mock_is_git, mock_walk
+    ):
         mock_walk.return_value = [
-            ('foo', self.directories_folder, ('baz',)),
+            ('foo', self.directories_folder, ('baz', )),
             ('foo/bar', ('d', 'e', 'f'), ('spam', 'eggs')),
         ]
         mock_is_git.return_value = True
@@ -40,14 +41,14 @@ class TestPullAll(unittest.TestCase):
         mock_is_git.assert_has_calls(calls)
 
         calls_for_process_creation = self.get_calls_for_process_creation(
-            self.directories_folder,
-            puller
-        )
+            self.directories_folder, puller)
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
 
-    def test_pull_all_starts_process_for_all_folders_when_recursive(self, mock_multiprocess, mock_is_git, mock_walk):
+    def test_pull_all_starts_process_for_all_folders_when_recursive(
+        self, mock_multiprocess, mock_is_git, mock_walk
+    ):
         mock_walk.return_value = [
-            ('foo', self.directories_folder, ('baz',)),
+            ('foo', self.directories_folder, ('baz', )),
             ('foo/bar', self.directory_sub_folder, ('spam', 'eggs')),
         ]
         mock_is_git.return_value = True
@@ -58,9 +59,7 @@ class TestPullAll(unittest.TestCase):
         directories_to_be_pulled = self.directories_folder + self.directory_sub_folder
 
         calls_for_process_creation = self.get_calls_for_process_creation(
-            directories_to_be_pulled,
-            puller
-        )
+            directories_to_be_pulled, puller)
         mock_multiprocess.assert_has_calls(calls_for_process_creation)
 
     def get_calls_for_process_creation(self, directories_to_be_pulled, puller):
@@ -75,10 +74,9 @@ class TestPullAll(unittest.TestCase):
         '''
         calls_for_process_creation = list(chain.from_iterable(
             (
-                call(args=[dir], target=puller.do_pull_in),
-                call().start()
-            ) for dir in directories_to_be_pulled
-        ))
+                call(args=[dir],
+                     target=puller.do_pull_in), call().start()
+            ) for dir in directories_to_be_pulled))
         return calls_for_process_creation
 
 
@@ -88,26 +86,34 @@ class TestDoPullIn(unittest.TestCase):
         self.directory = 'foo'
         self.puller = Pulla()
 
-    def test_perform_git_pull_called_for_passed_directory(self, mock_perform_git_pull):
+    def test_perform_git_pull_called_for_passed_directory(
+        self, mock_perform_git_pull
+    ):
         self.puller.do_pull_in(self.directory)
 
         mock_perform_git_pull.assert_called_once_with(self.directory)
 
     @patch('pulla.pulla.Pulla.get_formatted_status_message')
-    def test_status_success_when_git_command_successful(self, mock_get_formatted_status_message, mock_perform_git_pull):
+    def test_status_success_when_git_command_successful(
+        self, mock_get_formatted_status_message, mock_perform_git_pull
+    ):
         mock_perform_git_pull.return_value = 0
 
         self.puller.do_pull_in(self.directory)
 
-        mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Success')
+        mock_get_formatted_status_message.assert_called_once_with(
+            self.directory, 0)
 
     @patch('pulla.pulla.Pulla.get_formatted_status_message')
-    def test_status_fail_when_git_command_successful(self, mock_get_formatted_status_message, mock_perform_git_pull):
+    def test_status_fail_when_git_command_successful(
+        self, mock_get_formatted_status_message, mock_perform_git_pull
+    ):
         mock_perform_git_pull.return_value = 128
 
         self.puller.do_pull_in(self.directory)
 
-        mock_get_formatted_status_message.assert_called_once_with(self.directory, 'Fail')
+        mock_get_formatted_status_message.assert_called_once_with(
+            self.directory, 128)
 
 
 class TestPerformGitPull(unittest.TestCase):
@@ -117,7 +123,8 @@ class TestPerformGitPull(unittest.TestCase):
 
     @patch('pulla.pulla.get_git_version')
     @patch('os.system')
-    def test_pull_done_silently_when_no_verbosity(self, mock_os_system_cmd, mock_git_ver):
+    def test_pull_done_silently_when_no_verbosity(self, mock_os_system_cmd,
+                                                  mock_git_ver):
         expected_status = 128
         mock_os_system_cmd.return_value = expected_status
         mock_git_ver.return_value = '2.2.2'
@@ -130,7 +137,8 @@ class TestPerformGitPull(unittest.TestCase):
 
     @patch('pulla.pulla.get_git_version')
     @patch('os.system')
-    def test_pull_done_when_verbosity_level_set_one(self, mock_os_system, mock_git_ver):
+    def test_pull_done_when_verbosity_level_set_one(self, mock_os_system,
+                                                    mock_git_ver):
         self.puller.verbosity = 1
         mock_git_ver.return_value = '2.2.2'
         expected_cmd = 'git -C foo pull --verbose'
@@ -138,6 +146,21 @@ class TestPerformGitPull(unittest.TestCase):
         self.puller.perform_git_pull(self.directory)
 
         mock_os_system.assert_called_once_with(expected_cmd)
+
+
+
+class TestGetFormattedMessage(unittest.TestCase):
+    def setUp(self):
+        self.directory = 'foo'
+        self.puller = Pulla()
+
+    def test_proper_success_message_returned(self):
+        out = self.puller.get_formatted_status_message(self.directory, 128)
+        self.assertEqual(out, 'foo                            \x1b[31mFail\x1b[39m')
+
+    def test_proper_fail_message_returned(self):
+        out = self.puller.get_formatted_status_message(self.directory, 0)
+        self.assertEqual(out, 'foo                            \x1b[32mSuccess\x1b[39m')
 
 
 if __name__ == '__main__':
