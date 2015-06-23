@@ -1,8 +1,7 @@
 from distutils.core import setup
 
 def get_version():
-    import pulla
-    return pulla.__version__
+    return '0.1.1'
 
 def get_requirements():
     with open('requirements.txt', 'rU') as fhan:
