@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 def get_version():
-    return '0.1.1'
+    return '0.1.2'
 
 def get_requirements():
     with open('requirements.txt', 'rU') as fhan:
