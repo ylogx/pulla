@@ -1,4 +1,4 @@
 from .pulla import Pulla
 from .logger import Logger
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'

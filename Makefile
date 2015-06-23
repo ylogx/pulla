@@ -31,6 +31,9 @@ coverage:
 	@coverage run $(NOSETESTS_EXEC)
 	@coverage report
 
+rst_test:
+	pandoc --from=markdown --to=rst README.md | rst2html.py >/dev/null
+
 test:
 	@- $(foreach TEST,$(TESTS), \
 		echo === Running test: $(TEST); \
