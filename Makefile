@@ -34,23 +34,6 @@ coverage:
 rst_test:
 	pandoc --from=markdown --to=rst README.md | rst2html.py >/dev/null
 
-test:
-	@- $(foreach TEST,$(TESTS), \
-		echo === Running test: $(TEST); \
-		$(PYTHON_EXEC) -m $(TEST) $(PYFLAGS); \
-		)
-
-test2:
-	@- $(foreach TEST,$(TESTS), \
-		echo === Running python2 test: $(TEST); \
-		$(PYTHON2_EXEC) -m $(TEST) $(PYFLAGS); \
-		)
-test3:
-	@- $(foreach TEST,$(TESTS), \
-		echo === Running python3 test: $(TEST); \
-		$(PYTHON3_EXEC) -m $(TEST) $(PYFLAGS); \
-		)
-
 clean:
 	find . -type f -name '*.pyc' -exec rm {} +
 	find . -type d -name '__pycache__' -exec rm -r {} +
