@@ -1,6 +1,8 @@
 Pulla
 =========
 
+[![Join the chat at https://gitter.im/shubhamchaudhary/pulla](https://badges.gitter.im/shubhamchaudhary/pulla.svg)](https://gitter.im/shubhamchaudhary/pulla?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![PyPI Version](https://img.shields.io/pypi/v/pulla.svg)](https://pypi.python.org/pypi/pulla) [![PyPI Downloads](https://img.shields.io/pypi/dm/pulla.svg)](https://pypi.python.org/pypi/pulla) [![PyPI License](https://img.shields.io/pypi/l/pulla.svg)](https://pypi.python.org/pypi/pulla) [![GitHub tag](https://img.shields.io/github/tag/shubhamchaudhary/pulla.svg)](https://github.com/shubhamchaudhary/pulla/releases) [![GitHub release](https://img.shields.io/github/release/shubhamchaudhary/pulla.svg)](https://github.com/shubhamchaudhary/pulla/releases/latest)
 
 [![Build Status Travis-CI](https://travis-ci.org/shubhamchaudhary/pulla.svg)](https://travis-ci.org/shubhamchaudhary/pulla) [![Coverage Status](https://coveralls.io/repos/shubhamchaudhary/pulla/badge.svg)](https://coveralls.io/r/shubhamchaudhary/pulla) [![Build Status Snap-CI](https://snap-ci.com/shubhamchaudhary/pulla/branch/develop/build_image)](https://snap-ci.com/shubhamchaudhary/pulla/branch/develop) [![Circle CI](https://circleci.com/gh/shubhamchaudhary/pulla.svg?style=svg)](https://circleci.com/gh/shubhamchaudhary/pulla) [![Requirements Status](https://requires.io/github/shubhamchaudhary/pulla/requirements.svg)](https://requires.io/github/shubhamchaudhary/pulla/requirements/)
