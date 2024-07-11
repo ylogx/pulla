@@ -1,11 +1,11 @@
 PACKAGE="Pulla"
 PACKAGE_LOWER=$(shell echo $(PACKAGE) | sed 's/.*/\L&/')
 PIP_EXEC=pip
-PYTHON_EXEC=python
+PYTHON_EXEC=python3
 PYTHON2_EXEC=python2.7
 PYTHON3_EXEC=python3
 NOSETESTS_EXEC=$(shell which nosetests)
-VERSION = $(shell python -c 'import $(PACKAGE_LOWER); print($(PACKAGE_LOWER).__version__)')
+VERSION = $(shell grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+" setup.py)
 TEST_FILES = $(wildcard tests/test_*.py)
 TESTS = $(subst .py,,$(subst /,.,$(TEST_FILES)))
 
@@ -33,23 +33,6 @@ coverage:
 
 rst_test:
 	pandoc --from=markdown --to=rst README.md | rst2html.py >/dev/null
-
-test:
-	@- $(foreach TEST,$(TESTS), \
-		echo === Running test: $(TEST); \
-		$(PYTHON_EXEC) -m $(TEST) $(PYFLAGS); \
-		)
-
-test2:
-	@- $(foreach TEST,$(TESTS), \
-		echo === Running python2 test: $(TEST); \
-		$(PYTHON2_EXEC) -m $(TEST) $(PYFLAGS); \
-		)
-test3:
-	@- $(foreach TEST,$(TESTS), \
-		echo === Running python3 test: $(TEST); \
-		$(PYTHON3_EXEC) -m $(TEST) $(PYFLAGS); \
-		)
 
 clean:
 	find . -type f -name '*.pyc' -exec rm {} +

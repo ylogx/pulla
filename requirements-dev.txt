@@ -1,4 +1,4 @@
-colorama==0.3.3
+colorama==0.4.6
 
 nose
 mock
