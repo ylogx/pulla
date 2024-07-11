@@ -6,7 +6,7 @@ def get_version():
 
 
 def get_requirements():
-    with open("requirements.txt", "rU") as fhan:
+    with open("requirements.txt", "r") as fhan:
         requires = [line.strip() for line in fhan.readlines()]
     return requires
 
