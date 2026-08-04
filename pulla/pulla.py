@@ -60,7 +60,7 @@ class Pulla:
         else:
             os.chdir(directory)
             cmd = 'git pull'
-        if self.verbosity is not 0:
+        if self.verbosity != 0:
             cmd += ' --verbose'
         else:
             cmd += ' &> /dev/null'
