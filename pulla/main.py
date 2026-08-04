@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
-from __future__ import print_function
-
-import sys
+import asyncio
 import os
-import argparse
+from typing import Optional
+
+import typer
 
 from . import __version__
 from .pulla import Pulla
 from .utils import is_this_a_git_dir
 from .logger import verbosity_level
+
+app = typer.Typer(add_completion=False)
 
 
 def print_version():
@@ -20,63 +22,56 @@ def print_version():
     print('There is NO WARRANTY, to the extent permitted by law.')
 
 
-def parse_known_args():
-    """ Parse command line arguments
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--folder',
-                        type=str,
-                        dest='folder',
-                        help='Update the repos in this folder')
-    parser.add_argument('-V', '--version',
-                        action='store_true',
-                        dest='version',
-                        help='Print the version number and exit')
-    mutually_exclusive_group = parser.add_mutually_exclusive_group()
-
-    mutually_exclusive_group.add_argument(
-        '-v', '--verbose',
-        action='store_true',
-        help='Show verbose information.'
-        ' Higher verbosity can be selected by --verbosity'
-        ' flag')
-    mutually_exclusive_group.add_argument(
-        '-l', '--verbosity',
-        type=int,
-        help='Set higher verbosity level for more detailed'
-        ' information: 1. Low, 2. Medium, 3. High',
-        choices=range(1, 4))
-
-    args, otherthings = parser.parse_known_args()
-    return args, otherthings
-
-
-def main():
-    """ Main
-    """
-    args, otherthings = parse_known_args()
-
-    if args.version:
+def version_callback(value: bool):
+    if value:
         print_version()
-        return 0
+        raise typer.Exit()
+
+
+@app.command()
+def main(
+    folder: Optional[str] = typer.Option(
+        None, '-f', '--folder',
+        help='Update the repos in this folder'),
+    verbose: bool = typer.Option(
+        False, '-v', '--verbose',
+        help='Show verbose information. Higher verbosity can be selected'
+        ' by --verbosity flag'),
+    verbosity: Optional[int] = typer.Option(
+        None, '-l', '--verbosity',
+        min=1, max=3,
+        help='Set higher verbosity level for more detailed information:'
+        ' 1. Low, 2. Medium, 3. High'),
+    version: Optional[bool] = typer.Option(
+        None, '-V', '--version',
+        callback=version_callback, is_eager=True,
+        help='Print the version number and exit'),
+):
+    if verbose and verbosity is not None:
+        raise typer.BadParameter(
+            '-v/--verbose and -l/--verbosity are mutually exclusive')
 
     directory = os.path.abspath(os.curdir)
-    if args.folder:
-        directory = args.folder
+    if folder:
+        directory = folder
 
-    verbosity = 0
-    if args.verbose:
-        verbosity = verbosity_level['low']
-    elif args.verbosity:
-        verbosity = args.verbosity
+    resolved_verbosity = 0
+    if verbose:
+        resolved_verbosity = verbosity_level['low']
+    elif verbosity:
+        resolved_verbosity = verbosity
 
-    pulla = Pulla(verbosity=verbosity, recursive=False)
+    puller = Pulla(verbosity=resolved_verbosity, recursive=False)
 
+    asyncio.run(_pull(puller, directory))
+
+
+async def _pull(puller, directory):
     if is_this_a_git_dir(directory):
-        pulla.do_pull_in(directory)
+        await puller.do_pull_in(directory)
     else:
-        pulla.pull_all(directory)
+        await puller.pull_all(directory)
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    app()

@@ -4,6 +4,6 @@ import sys
 import pulla.main
 
 try:
-    sys.exit(pulla.main.main())
+    pulla.main.app()
 except KeyboardInterrupt:
     sys.exit(1)
