@@ -1,9 +1,9 @@
 [run]
 branch = True
-omit = /usr*,/opt*,setup.py,*egg*,*virtualenv*,.venv/*,.tox/*,test/*,tests/*,/Library*
+omit = /usr*,/opt*,*egg*,*virtualenv*,.venv/*,.tox/*,test/*,tests/*,/Library*
 
 [report]
-ignore-errors = True
+ignore_errors = True
 exclude_lines =
     pragma: no cover
     if __name__ == .__main__.:
