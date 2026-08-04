@@ -1,17 +1,12 @@
 import os
-import sys
 from unittest.mock import patch
 
 import pytest
+from typer.testing import CliRunner
 
-from pulla.main import main
+from pulla.main import app
 
-
-@pytest.fixture(autouse=True)
-def restore_argv():
-    argv_backup = sys.argv
-    yield
-    sys.argv = argv_backup
+runner = CliRunner()
 
 
 @pytest.fixture
@@ -26,11 +21,11 @@ def no_git_pull():
 @patch('pulla.main.is_this_a_git_dir')
 def test_should_do_pull_in_subdirectories_if_no_args(mock_is_git_dir, no_git_pull):
     mock_do_pull_in, mock_pull_all = no_git_pull
-    sys.argv = ['dummy']
     mock_is_git_dir.return_value = False
 
-    main()
+    result = runner.invoke(app, [])
 
+    assert result.exit_code == 0
     curdir = os.path.abspath(os.curdir)
     mock_pull_all.assert_called_once_with(curdir)
 
@@ -39,39 +34,47 @@ def test_should_do_pull_in_subdirectories_if_no_args(mock_is_git_dir, no_git_pul
 def test_should_do_pull_in_current_directory_if_is_git_dir(mock_is_git_dir, no_git_pull):
     mock_do_pull_in, mock_pull_all = no_git_pull
     curdir = os.path.abspath(os.curdir)
-    sys.argv = ['dummy']
     mock_is_git_dir.return_value = True
 
-    main()
+    result = runner.invoke(app, [])
 
+    assert result.exit_code == 0
     mock_do_pull_in.assert_called_once_with(curdir)
 
 
 @patch('pulla.main.Pulla')
 def test_should_set_verbosity_1_if_short_flag_passed(mock_pulla, no_git_pull):
-    sys.argv = ['dummy', '-v']
-    main()
+    result = runner.invoke(app, ['-v'])
+
+    assert result.exit_code == 0
     mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
 
 
 @patch('pulla.main.Pulla')
 def test_should_set_verbosity_1_if_long_flag_passed(mock_pulla, no_git_pull):
-    sys.argv = ['dummy', '--verbose']
-    main()
+    result = runner.invoke(app, ['--verbose'])
+
+    assert result.exit_code == 0
     mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
+
+
+def test_should_fail_if_verbose_and_verbosity_both_passed(no_git_pull):
+    result = runner.invoke(app, ['-v', '-l', '2'])
+
+    assert result.exit_code != 0
 
 
 @patch('pulla.main.print_version')
 def test_should_print_version_and_exit_with_short_flag(mock_print_version):
-    sys.argv = ['dummy', '-V']
-    out = main()
+    result = runner.invoke(app, ['-V'])
+
     mock_print_version.assert_called_once_with()
-    assert out == 0
+    assert result.exit_code == 0
 
 
 @patch('pulla.main.print_version')
 def test_should_print_version_and_exit_with_long_flag(mock_print_version):
-    sys.argv = ['dummy', '--version']
-    out = main()
+    result = runner.invoke(app, ['--version'])
+
     mock_print_version.assert_called_once_with()
-    assert out == 0
+    assert result.exit_code == 0
