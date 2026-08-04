@@ -42,23 +42,23 @@ def test_should_do_pull_in_current_directory_if_is_git_dir(mock_is_git_dir, no_g
     mock_do_pull_in.assert_called_once_with(curdir)
 
 
-@patch('pulla.main.Pulla')
-def test_should_set_verbosity_1_if_short_flag_passed(mock_pulla, no_git_pull):
+@patch('pulla.main.Pulla', autospec=True)
+def test_should_set_verbosity_1_if_short_flag_passed(mock_pulla):
     result = runner.invoke(app, ['-v'])
 
     assert result.exit_code == 0
     mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
 
 
-@patch('pulla.main.Pulla')
-def test_should_set_verbosity_1_if_long_flag_passed(mock_pulla, no_git_pull):
+@patch('pulla.main.Pulla', autospec=True)
+def test_should_set_verbosity_1_if_long_flag_passed(mock_pulla):
     result = runner.invoke(app, ['--verbose'])
 
     assert result.exit_code == 0
     mock_pulla.assert_called_once_with(verbosity=1, recursive=False)
 
 
-def test_should_fail_if_verbose_and_verbosity_both_passed(no_git_pull):
+def test_should_fail_if_verbose_and_verbosity_both_passed():
     result = runner.invoke(app, ['-v', '-l', '2'])
 
     assert result.exit_code != 0

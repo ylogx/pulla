@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import asyncio
 import os
 from typing import Optional
 
@@ -62,10 +63,14 @@ def main(
 
     puller = Pulla(verbosity=resolved_verbosity, recursive=False)
 
+    asyncio.run(_pull(puller, directory))
+
+
+async def _pull(puller, directory):
     if is_this_a_git_dir(directory):
-        puller.do_pull_in(directory)
+        await puller.do_pull_in(directory)
     else:
-        puller.pull_all(directory)
+        await puller.pull_all(directory)
 
 
 if __name__ == '__main__':

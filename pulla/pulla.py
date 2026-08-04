@@ -1,13 +1,9 @@
-from __future__ import print_function
-
+import asyncio
 import os
-import multiprocessing
 
-from .utils import is_this_a_git_dir, get_git_version
+from .utils import is_this_a_git_dir
 from .logger import Logger
 from .logger import verbosity_level
-
-VERSION_WITH_C_FLAG_SUPPORT = "1.8.5"
 
 
 class Pulla:
@@ -20,20 +16,17 @@ class Pulla:
         self.max_dir_length = 20
         self.logger = Logger(self.verbosity)
 
-    def pull_all(self, folder):
+    async def pull_all(self, folder):
+        git_dirs = []
         for (dirpath, dirnames, _) in os.walk(os.path.abspath(folder)):
-            threads = []
             self.max_dir_length = self.find_max_dir_length(dirnames)
             for directory in dirnames:
                 directory = os.path.join(dirpath, directory)
                 if is_this_a_git_dir(directory):
-                    process = multiprocessing.Process(target=self.do_pull_in,
-                                                      args=[directory])
-                    process.start()
-                    threads.append(process)
+                    git_dirs.append(directory)
             if not self.recursive:
                 break
-        return None
+        await asyncio.gather(*(self.do_pull_in(d) for d in git_dirs))
 
     def find_max_dir_length(self, directories):
         max_dir_length = 20
@@ -42,31 +35,27 @@ class Pulla:
                 max_dir_length = len(directory)
         return max_dir_length
 
-    def do_pull_in(self, directory):
+    async def do_pull_in(self, directory):
         self.logger.print_log('----------------------',
                               verbosity_level['high'])
-        status = self.perform_git_pull(directory)
+        status = await self.perform_git_pull(directory)
 
         self.logger.print_log(self.get_formatted_status_message(
             directory, status), verbosity_level['low'])
         self.logger.print_log('----------------------',
                               verbosity_level['high'])
 
-    def perform_git_pull(self, directory):
-        can_use_c_flag = get_git_version() >= VERSION_WITH_C_FLAG_SUPPORT
-        if can_use_c_flag:
-            cmd = 'git -C ' + directory + ' pull'
-        else:
-            os.chdir(directory)
-            cmd = 'git pull'
+    async def perform_git_pull(self, directory):
+        args = ['git', 'pull']
+        stdout = stderr = None
         if self.verbosity != 0:
-            cmd += ' --verbose'
+            args.append('--verbose')
         else:
-            cmd += ' &> /dev/null'
-        status = os.system(cmd)
-        if not can_use_c_flag:
-            os.chdir('..')
-        return status
+            stdout = stderr = asyncio.subprocess.DEVNULL
+
+        process = await asyncio.create_subprocess_exec(
+            *args, cwd=directory, stdout=stdout, stderr=stderr)
+        return await process.wait()
 
     def get_formatted_status_message(self, directory, status):
         directory = os.path.basename(directory)

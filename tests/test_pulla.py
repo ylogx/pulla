@@ -1,6 +1,6 @@
+import asyncio
 import os
-from itertools import chain
-from unittest.mock import call, patch
+from unittest.mock import AsyncMock, MagicMock, call, patch
 
 import pytest
 
@@ -10,27 +10,16 @@ DIRECTORIES_FOLDER = ('a', 'b', 'c')
 DIRECTORY_SUB_FOLDER = ('d', 'e', 'f')
 
 
-def calls_for_process_creation(directories_to_be_pulled, puller):
-    """
-    :return: list with format
-    [
-        call(args=['dir1'], target=puller.do_pull_in),
-        call().start(),
-        call(args=['dir2'], target=puller.do_pull_in),
-        call().start(),
-    ]
-    """
-    return list(chain.from_iterable(
-        (
-            call(args=[dir], target=puller.do_pull_in), call().start()
-        ) for dir in directories_to_be_pulled))
+@pytest.fixture
+def puller():
+    return Pulla()
 
 
 @patch('os.walk')
 @patch('pulla.pulla.is_this_a_git_dir')
-@patch('multiprocessing.Process')
-def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recursive(
-    mock_multiprocess, mock_is_git, mock_walk
+@patch('pulla.pulla.Pulla.do_pull_in')
+def test_pull_all_pulls_folders_in_passed_directory_when_not_recursive(
+    mock_do_pull_in, mock_is_git, mock_walk, puller
 ):
     mock_walk.return_value = [
         ('foo', DIRECTORIES_FOLDER, ('baz', )),
@@ -38,23 +27,18 @@ def test_pull_all_starts_process_for_folders_in_passed_directory_when_not_recurs
     ]
     mock_is_git.return_value = True
 
-    puller = Pulla()
-    puller.pull_all('foo')
+    asyncio.run(puller.pull_all('foo'))
 
-    directories_folder_to_be_pulled = [os.path.join('foo', dir) for dir in DIRECTORIES_FOLDER]
-    calls = [call(dir) for dir in directories_folder_to_be_pulled]
-    mock_is_git.assert_has_calls(calls)
-
-    mock_multiprocess.assert_has_calls(
-        calls_for_process_creation(directories_folder_to_be_pulled, puller))
+    directories_to_be_pulled = [os.path.join('foo', dir) for dir in DIRECTORIES_FOLDER]
+    mock_is_git.assert_has_calls([call(dir) for dir in directories_to_be_pulled])
+    mock_do_pull_in.assert_has_calls(
+        [call(dir) for dir in directories_to_be_pulled], any_order=True)
 
 
 @patch('os.walk')
 @patch('pulla.pulla.is_this_a_git_dir')
-@patch('multiprocessing.Process')
-def test_pull_all_starts_process_for_all_folders_when_recursive(
-    mock_multiprocess, mock_is_git, mock_walk
-):
+@patch('pulla.pulla.Pulla.do_pull_in')
+def test_pull_all_pulls_all_folders_when_recursive(mock_do_pull_in, mock_is_git, mock_walk):
     mock_walk.return_value = [
         ('foo', DIRECTORIES_FOLDER, ('baz', )),
         ('foo/bar', DIRECTORY_SUB_FOLDER, ('spam', 'eggs')),
@@ -62,24 +46,19 @@ def test_pull_all_starts_process_for_all_folders_when_recursive(
     mock_is_git.return_value = True
 
     puller = Pulla(recursive=True)
-    puller.pull_all('foo')
+    asyncio.run(puller.pull_all('foo'))
 
     directories_to_be_pulled = (
         [os.path.join('foo', dir) for dir in DIRECTORIES_FOLDER]
         + [os.path.join('foo', 'bar', dir) for dir in DIRECTORY_SUB_FOLDER]
     )
-    mock_multiprocess.assert_has_calls(
-        calls_for_process_creation(directories_to_be_pulled, puller))
-
-
-@pytest.fixture
-def puller():
-    return Pulla()
+    mock_do_pull_in.assert_has_calls(
+        [call(dir) for dir in directories_to_be_pulled], any_order=True)
 
 
 @patch('pulla.pulla.Pulla.perform_git_pull')
 def test_perform_git_pull_called_for_passed_directory(mock_perform_git_pull, puller):
-    puller.do_pull_in('foo')
+    asyncio.run(puller.do_pull_in('foo'))
 
     mock_perform_git_pull.assert_called_once_with('foo')
 
@@ -91,7 +70,7 @@ def test_status_success_when_git_command_successful(
 ):
     mock_perform_git_pull.return_value = 0
 
-    puller.do_pull_in('foo')
+    asyncio.run(puller.do_pull_in('foo'))
 
     mock_get_formatted_status_message.assert_called_once_with('foo', 0)
 
@@ -103,35 +82,36 @@ def test_status_fail_when_git_command_successful(
 ):
     mock_perform_git_pull.return_value = 128
 
-    puller.do_pull_in('foo')
+    asyncio.run(puller.do_pull_in('foo'))
 
     mock_get_formatted_status_message.assert_called_once_with('foo', 128)
 
 
-@patch('pulla.pulla.get_git_version')
-@patch('os.system')
-def test_pull_done_silently_when_no_verbosity(mock_os_system_cmd, mock_git_ver, puller):
-    expected_status = 128
-    mock_os_system_cmd.return_value = expected_status
-    mock_git_ver.return_value = '2.2.2'
-    expected_cmd = 'git -C foo pull &> /dev/null'
+@patch('pulla.pulla.asyncio.create_subprocess_exec')
+def test_pull_done_silently_when_no_verbosity(mock_create_subprocess, puller):
+    mock_process = MagicMock()
+    mock_process.wait = AsyncMock(return_value=128)
+    mock_create_subprocess.return_value = mock_process
 
-    status = puller.perform_git_pull('foo')
+    status = asyncio.run(puller.perform_git_pull('foo'))
 
-    mock_os_system_cmd.assert_called_once_with(expected_cmd)
-    assert status == expected_status
+    mock_create_subprocess.assert_called_once_with(
+        'git', 'pull', cwd='foo',
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
+    assert status == 128
 
 
-@patch('pulla.pulla.get_git_version')
-@patch('os.system')
-def test_pull_done_when_verbosity_level_set_one(mock_os_system, mock_git_ver, puller):
+@patch('pulla.pulla.asyncio.create_subprocess_exec')
+def test_pull_done_when_verbosity_level_set_one(mock_create_subprocess, puller):
     puller.verbosity = 1
-    mock_git_ver.return_value = '2.2.2'
-    expected_cmd = 'git -C foo pull --verbose'
+    mock_process = MagicMock()
+    mock_process.wait = AsyncMock(return_value=0)
+    mock_create_subprocess.return_value = mock_process
 
-    puller.perform_git_pull('foo')
+    asyncio.run(puller.perform_git_pull('foo'))
 
-    mock_os_system.assert_called_once_with(expected_cmd)
+    mock_create_subprocess.assert_called_once_with(
+        'git', 'pull', '--verbose', cwd='foo', stdout=None, stderr=None)
 
 
 def test_proper_fail_message_returned(puller):
