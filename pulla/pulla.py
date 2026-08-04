@@ -2,7 +2,6 @@ from __future__ import print_function
 
 import os
 import multiprocessing
-from colorama import Fore
 
 from .utils import is_this_a_git_dir, get_git_version
 from .logger import Logger
@@ -71,9 +70,9 @@ class Pulla:
 
     def get_formatted_status_message(self, directory, status):
         directory = os.path.basename(directory)
-        status_msg = Fore.RED + 'Fail' + Fore.RESET
+        status_msg = '[red]Fail[/red]'
         if status == GitStatus.SUCCESS:
-            status_msg = Fore.GREEN + 'Success' + Fore.RESET
+            status_msg = '[green]Success[/green]'
         format_string = '{0:<' + str(self.max_dir_length + 10) + '} {1:<10}'
         return format_string.format(os.path.join(directory), status_msg)
 

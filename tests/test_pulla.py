@@ -136,9 +136,9 @@ def test_pull_done_when_verbosity_level_set_one(mock_os_system, mock_git_ver, pu
 
 def test_proper_fail_message_returned(puller):
     out = puller.get_formatted_status_message('foo', 128)
-    assert out == 'foo                            \x1b[31mFail\x1b[39m'
+    assert out == 'foo                            [red]Fail[/red]'
 
 
 def test_proper_success_message_returned(puller):
     out = puller.get_formatted_status_message('foo', 0)
-    assert out == 'foo                            \x1b[32mSuccess\x1b[39m'
+    assert out == 'foo                            [green]Success[/green]'
