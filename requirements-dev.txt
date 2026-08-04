@@ -1,6 +1,0 @@
-colorama==0.4.6
-
-nose
-mock
-coverage
-unittest2

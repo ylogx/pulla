@@ -1,39 +1,23 @@
-PACKAGE="Pulla"
-PACKAGE_LOWER=$(shell echo $(PACKAGE) | sed 's/.*/\L&/')
-PIP_EXEC=pip
-PYTHON_EXEC=python3
-PYTHON2_EXEC=python2.7
-PYTHON3_EXEC=python3
-NOSETESTS_EXEC=$(shell which nosetests)
-VERSION = $(shell grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+" setup.py)
-TEST_FILES = $(wildcard tests/test_*.py)
-TESTS = $(subst .py,,$(subst /,.,$(TEST_FILES)))
+VERSION = $(shell grep -m1 '^version' pyproject.toml | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+")
 
-all.PHONY: nosetests_3 nosetests_2
+.PHONY: test install build coverage clean
 
-nosetests_2:
-	@echo "Running $(PYTHON2_EXEC) tests"
-	@$(PYTHON2_EXEC) $(NOSETESTS_EXEC)
+test:
+	uv run pytest
 
-nosetests_3:
-	@echo "Running $(PYTHON3_EXEC) tests"
-	@$(PYTHON3_EXEC) $(NOSETESTS_EXEC)
+install: build
+	@echo "Installing pulla $(VERSION) with uv tool"
+	uv tool install --force dist/pulla-$(VERSION)-py3-none-any.whl
 
-install:
-	@echo "Creating distribution package for version $(VERSION)"
-	@echo "-----------------------------------------------"
-	$(PYTHON_EXEC) setup.py sdist
-	@echo "Installing package using $(PIP_EXEC)"
-	@echo "----------------------------"
-	$(PIP_EXEC) install --upgrade dist/$(PACKAGE)-$(VERSION).tar.gz
+build:
+	@echo "Building distribution package for version $(VERSION)"
+	uv build
 
 coverage:
-	@coverage run $(NOSETESTS_EXEC)
-	@coverage report
-
-rst_test:
-	pandoc --from=markdown --to=rst README.md | rst2html.py >/dev/null
+	uv run coverage run -m pytest
+	uv run coverage report
 
 clean:
 	find . -type f -name '*.pyc' -exec rm {} +
 	find . -type d -name '__pycache__' -exec rm -r {} +
+	rm -rf dist build

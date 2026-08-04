@@ -41,7 +41,7 @@ class TestGetGitVersion(unittest.TestCase):
         self.GIT_VERSION_RESPONSE = 'git version 2.2.2'
 
     @unittest.skip
-    @patch.object('os.popen', 'read')
+    @patch.object(os, 'popen')
     def test_correct_git_version_returned(self, mock_popen):
         mock_popen.return_value = self.GIT_VERSION_RESPONSE
 
